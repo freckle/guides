@@ -63,4 +63,4 @@ https://github.com/commercialhaskell/stack/wiki/Script-interpreter
 
 #### resources
 
-* http://www.google.com/url?q=http%3A%2F%2Fnikita-volkov.github.io%2Fprofiling-cabal-projects%2F&sa=D&sntz=1&usg=AFQjCNG5ilnpZzp9WSpBklXlJJw-5jF6Cg
+* http://nikita-volkov.github.io/profiling-cabal-projects/

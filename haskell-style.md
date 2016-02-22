@@ -78,7 +78,17 @@ This is a good time to look at using a record to name the arguments or to use ne
 
 ### Records
 
-* comma-leading
+* comma-leading e.g.
+
+```haskell
+data Student
+  = Student
+  { firstName :: Text
+  , lastName :: Text
+  }
+```
+
+
 
 ### Sum Types
 

@@ -2,7 +2,16 @@
 
 ## Error throwing / exceptions
 
-TODO
+ * Try very hard to avoid partial functions
+ * If you know a function is safe, but somehow weren't able to "prove" it to GHC, use your error string to state why you think the error is impossible. e.g.
+ 
+ ```haskell
+ halfOfEvens :: Rational -> [Rational] -> [Rational]
+ halfOfEvens n = map (\d -> n `divEx` d) . filter (/= 0)
+   where
+     x `divEx` 0 = error "This should be impossible: We already filtered the list to remove zeroes"
+     x `divEx` d = x / d
+ ```
 
 ### Learning resources
 

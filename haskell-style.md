@@ -114,7 +114,7 @@ Signatures should lead with arrows
 
 ## Alignment
 
-You should never need to align to preceding text. That is, your aligment point should always be 3rd, 5th, 7th etc. column (because we two spaces of indenting).
+You should never need to align to preceding text. That is, your aligment point should always be 3rd, 5th, 7th etc. column (because we use two spaces of indenting).
 
 e.g. Instead of 
 
@@ -144,13 +144,14 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
 do
 ```haskell
 instance FromJSON (GameSession Never MathStandardAssignmentId) where
-  parseJSON = withObject "cannot parse GameSession" $ \o ->
-    GameSession 
-      <$> o .: "answers"
-      <*> o .: "domain-id"
-      <*> o .: "current-standard"
-      <*> o .: "sub-standard-perc"
-      <*> o .: "sub-sub-standard-perc"
-      <*> o .: "coins-gained"
-      <*> pure Never
+  parseJSON = 
+    withObject "cannot parse GameSession" $ \o ->
+      GameSession 
+        <$> o .: "answers"
+        <*> o .: "domain-id"
+        <*> o .: "current-standard"
+        <*> o .: "sub-standard-perc"
+        <*> o .: "sub-sub-standard-perc"
+        <*> o .: "coins-gained"
+        <*> pure Never
 ```

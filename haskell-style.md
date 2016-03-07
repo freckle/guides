@@ -111,3 +111,46 @@ Signatures should lead with arrows
 -> expr (Entity Student)
 -> m ()
 ```
+
+## Alignment
+
+You should never need to align to preceding text. That is, your aligment point should always be 3rd, 5th, 7th etc. column (because we two spaces of indenting).
+
+e.g. Instead of 
+
+```haskell
+instance FromJSON (GameSession Never MathStandardAssignmentId) where
+  parseJSON = withObject "cannot parse GameSession" $ \o ->
+    GameSession <$> o .: "answers"
+                <*> o .: "domain-id"
+                <*> o .: "current-standard"
+                <*> o .: "sub-standard-perc"
+                <*> o .: "sub-sub-standard-perc"
+                <*> o .: "coins-gained"
+                <*> pure Never
+ ```
+which will need cause a noisy diff if we rename `GameSession` (each following line also needs to be indented)
+```haskell
+instance FromJSON (GameSession Never MathStandardAssignmentId) where
+  parseJSON = withObject "cannot parse GameSession" $ \o ->
+    GameSession2 <$> o .: "answers"
+                 <*> o .: "domain-id"
+                 <*> o .: "current-standard"
+                 <*> o .: "sub-standard-perc"
+                 <*> o .: "sub-sub-standard-perc"
+                 <*> o .: "coins-gained"
+                 <*> pure Never
+```
+do
+```haskell
+instance FromJSON (GameSession Never MathStandardAssignmentId) where
+  parseJSON = withObject "cannot parse GameSession" $ \o ->
+    GameSession 
+      <$> o .: "answers"
+      <*> o .: "domain-id"
+      <*> o .: "current-standard"
+      <*> o .: "sub-standard-perc"
+      <*> o .: "sub-sub-standard-perc"
+      <*> o .: "coins-gained"
+      <*> pure Never
+```

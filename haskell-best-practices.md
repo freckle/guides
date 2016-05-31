@@ -68,6 +68,79 @@ Lens is a very convenient way to read and update deeply nested structures. Works
 
 https://github.com/commercialhaskell/stack/wiki/Script-interpreter
 
+## Data declaration with type family
+
+Sometimes you have two types which are very similar, both in their representations and in how they're used. For example,
+
+```haskell
+data Foo
+  = Foo
+  { a :: Int
+  , b :: Int
+  , c :: Int
+  }
+  
+ data Bar
+   = Bar
+   { a :: Int
+   , b :: Int
+   , c :: Int
+   , d :: Int
+   }
+```
+
+It would be a pain to duplicate functions which operate on these types. A first attempt to avoid that might be:
+
+```haskell
+data FooBar
+  = FooBar
+   { a :: Int
+   , b :: Int
+   , c :: Int
+   , d :: Maybe Int
+   }
+```
+
+but we lose value type safety/documentation here.
+
+A better approach is to parameterize the field which varies:
+
+```haskell
+type Never = Proxy
+type Always = Identity
+
+data FooBar f
+  = FooBar
+   { a :: Int
+   , b :: Int
+   , c :: Int
+   , d :: f Int
+   }
+   
+ type Foo = FooBar Never
+ type Bar = FooBar Always
+```
+
+This lets us share the commonalities and still differentiate in a safe way. But it's a little annoying that `Foo`'s `d` is wrapped in an `Identity` constructor at the value level. We can fix this final infelicity with type families:
+
+```haskell
+
+data FooBarType = Foo | Bar
+
+type family OnlyIfBar (x :: FooBarType) (a :: *) :: * where
+  OnlyIfBar Foo a = ()
+  OnlyIfBar Bar a = a
+
+data FooBar (x :: FooBarType)
+  = FooBar
+   { a :: Int
+   , b :: Int
+   , c :: Int
+   , d :: OnlyIfBar x Int
+   }
+```
+With this approach `d :: FooBar Foo -> ()` (total absence of `d` would be the best option, but without extensible records, `()` is the best we can do) and `d :: FooBar Bar -> Int`.
+
 ## Appendix
 
 #### resources

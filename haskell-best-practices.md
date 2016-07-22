@@ -141,6 +141,50 @@ data FooBar (x :: FooBarType)
 ```
 With this approach `d :: FooBar Foo -> ()` (total absence of `d` would be the best option, but without extensible records, `()` is the best we can do) and `d :: FooBar Bar -> Int`.
 
+## `newtype`s
+
+Newtypes in Haskell are used for 3 primary purposes:
+ 1. To document a type's meaning
+ 2. To refine the type (i.e. limit it's inhabitants)
+ 3. To define new/different instances
+ 
+At FR, we seldom do 1. Instead we prefer to use `Tagged` and `TypeLits`:
+
+```haskell
+sf :: Tagged "City" String
+sf = "San Francisco"
+```
+
+instead of 
+
+```haskell
+newtype City = City { unCity :: String }
+sf :: City
+sf = City "San Francisco"
+```
+
+2 looks like:
+```haskell
+module Natural (Natural(), mkNatural) where
+
+newtype Natural = Natural { unNatural :: Int }
+mkNatural :: Int -> Maybe Natural
+mkNatural n = if n >= 0 then Just (Natural n) else Nothing
+```
+
+3 looks like:
+```haskell
+newtype Add = Add { unAdd :: Int }
+instance Monoid Add where
+  mempty = 0
+  mappend = (+)
+newtype Mult = Mult { unMult :: Int }
+instance Monoid Mult where
+  mempty = 1
+  mappend = (*)
+```
+
+
 ## Appendix
 
 #### resources

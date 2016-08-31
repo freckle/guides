@@ -166,8 +166,8 @@ data SomeRecord = SomeRecord { someField :: Int
                              } deriving (Eq, Show)
 
 -- Good
-data SomeRecord' =
-  SomeRecord'
+data SomeRecord'
+  = SomeRecord'
   { someField :: Int
   , someOtherField :: Double
   } deriving (Eq, Show)
@@ -176,14 +176,14 @@ data SomeRecord' =
 data SomeSum = FirstConstructor
              | SecondConstructor Int
              | ThirdConstructor Double Text
-               deriving (Eq, Show)
+             deriving (Eq, Show)
 
 -- Good
 data SomeSum'
   = FirstConstructor'
   | SecondConstructor' Int
   | ThirdConstructor' Double Text
-    deriving (Eq, Show)
+  deriving (Eq, Show)
 ```
 
 #### Do statements
@@ -231,36 +231,38 @@ someBinding mx =
       mb = fmap (*2) mx
   in (+) <$> ma <*> mb
 
--- Good - put let on its own line and then we can use normal spacing
-someBinding' mx =
-  let
-    ma = fmap (+1) mx
-    mb = fmap (*2) mx
-  in (+) <$> ma <*> mb
-
--- Fine to keep binding on same line as let when you only have one
-someBinding'' mx =
-  let ma = fmap (+1) mx
-  in maybe 0 (*2) ma
-
--- You can also put the `in` expression on its own line
+-- Good - put `let` and `in` on its own line and then we can use normal spacing
 someBinding''' mx =
   let
     ma = fmap (+1) mx
     mb = fmap (*2) mx
   in
     (+) <$> ma <*> mb
+
+-- Fine to keep on same line when you only have one binding, but use your judgement
+someBinding'' mx =
+  let ma = fmap (+1) mx
+  in maybe 0 (*2) ma
 ```
 
 #### Where bindings
 ```haskell
--- This is the only place we allow odd-numbered indentation (the where is 1-space indented)
+-- We're pretty liberal with where bindings, but we mostly want to disallow this
+-- because the `where` disappears
+someBinding mx = f <$> mx <*> mx where f x y = x * x + y * y
+
+-- And this because the alignment is fiddly
+someBinding' mx = g $ f <$> mx <*> mx
+  where f x y = x * x + y * y
+        g = maybe 0 (*2)
+
+-- Good - though note that we have odd-numbered indentation for the `where` itself
 someBinding mx =
   f <$> mx <*> mx
  where
   f x y = x * x + y * y
 
--- This style is more in the spirit of context-free alignment
+-- Good - this style is more in the spirit of context-free alignment
 someBinding' mx =
   f <$> mx <*> mx
     where
@@ -280,15 +282,7 @@ someBinding''' mx my = do
   y <- my
   f x y
  where
-   f x y = x * x + y * y
-
--- or this
-someBinding'''' mx my = do
-  x <- mx
-  y <- my
-  f x y
-  where
-    f x y = x * x + y * y
+  f x y = x * x + y * y
 ```
 
 #### Lists and Tuples

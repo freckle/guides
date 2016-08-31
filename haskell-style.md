@@ -155,3 +155,167 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
         <*> o .: "coins-gained"
         <*> pure Never
 ```
+
+### More examples
+
+#### Data declarations
+```haskell
+--- Bad
+data SomeRecord = SomeRecord { someField :: Int
+                             , someOtherField :: Double
+                             } deriving (Eq, Show)
+
+-- Good
+data SomeRecord' =
+  SomeRecord'
+  { someField :: Int
+  , someOtherField :: Double
+  } deriving (Eq, Show)
+
+-- Bad
+data SomeSum = FirstConstructor
+             | SecondConstructor Int
+             | ThirdConstructor Double Text
+               deriving (Eq, Show)
+
+-- Good
+data SomeSum'
+  = FirstConstructor'
+  | SecondConstructor' Int
+  | ThirdConstructor' Double Text
+    deriving (Eq, Show)
+```
+
+#### Do statements
+```haskell
+-- Bad - do is indented 2 spaces, so the expressions following it have to be indented 5 spaces
+someBinding =
+  do x <- getLine
+     y <- getLine
+     putStrLn $ x <> y
+
+-- Good - do is left hanging so the bindings are just indented 2 spaces
+someBinding' = do
+  x <- getLine
+  y <- getLine
+  putStrLn $ x <> y
+```
+
+#### Case expressions
+```haskell
+-- Bad - aligning to case pushes expressions way to the left, and aligning arrows is fiddly
+someBinding mx = case mx of
+                   Nothing -> 0
+                   Just x  -> x
+
+-- Good - case on its own line, arrows don't need to be lined up
+someBinding' mx =
+  case mx of
+    Nothing -> 0
+    Just x -> x
+
+-- If your case-alternatives are more complex, you can put them on their own line:
+someBinding'' mx =
+  case mx of
+    Nothing ->
+      putStrLn "Got nothin'"
+    Just x ->
+      putStrLn $ "Got " <> show x
+```
+
+#### Let expressions
+```haskell
+-- Bad - aligning multiple let bindings like this is fiddly
+someBinding mx =
+  let ma = fmap (+1) mx
+      mb = fmap (*2) mx
+  in (+) <$> ma <*> mb
+
+-- Good - put let on its own line and then we can use normal spacing
+someBinding' mx =
+  let
+    ma = fmap (+1) mx
+    mb = fmap (*2) mx
+  in (+) <$> ma <*> mb
+
+-- Fine to keep binding on same line as let when you only have one
+someBinding'' mx =
+  let ma = fmap (+1) mx
+  in maybe 0 (*2) ma
+
+-- You can also put the `in` expression on its own line
+someBinding''' mx =
+  let
+    ma = fmap (+1) mx
+    mb = fmap (*2) mx
+  in
+    (+) <$> ma <*> mb
+```
+
+#### Where bindings
+```haskell
+-- This is the only place we allow odd-numbered indentation (the where is 1-space indented)
+someBinding mx =
+  f <$> mx <*> mx
+ where
+  f x y = x * x + y * y
+
+-- This style is more in the spirit of context-free alignment
+someBinding' mx =
+  f <$> mx <*> mx
+    where
+      f x y = x * x + y * y
+
+-- HOWEVER, it doesn't work with do blocks:
+someBinding'' mx my = do
+  x <- mx
+  y <- my
+  f x y
+   where -- PARSE ERROR - parser thinks this where is a part of the last expression
+    f x y = x * x + y * y
+
+-- Instead, you have to do either this
+someBinding''' mx my = do
+  x <- mx
+  y <- my
+  f x y
+ where
+   f x y = x * x + y * y
+
+-- or this
+someBinding'''' mx my = do
+  x <- mx
+  y <- my
+  f x y
+  where
+    f x y = x * x + y * y
+```
+
+#### Lists and Tuples
+```haskell
+-- Short lists and tuples can be placed on one line
+names = ["Joe", "Bob", "Sam"]
+car = ("Acura", "Integra", 2000)
+
+-- Multiline lists and tuples and have commas first
+names' =
+  [ "Joe"
+  , "Bob"
+  , "Same"
+  ]
+
+car' =
+  ( "Acura"
+  , "Integra"
+  , 2000
+  )
+
+-- You're more likely to see multiline records than tuples
+teacher =
+  Teacher
+    { firstName = "First"
+    , lastName = "Last"
+    , schoolId = 123
+    , hasPremium = True
+    }
+```

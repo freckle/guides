@@ -199,15 +199,15 @@ return {
 
 // good
 return (
-  { name: "Jeff" }
+  {name: "Jeff"}
 )
 // also good
-return { name: "Jeff" }
+return {name: "Jeff"}
 ```
 
 ## Component splitting
 
-Each React component should live in its. This rule only apply to stateful component. If you have a component that uses small stateless components specific to the main component you can put them in one file.
+Each React component should live in its own file. This rule only apply to stateful components. If you have a component that uses small stateless components specific to the main component you can put them in one file.
 
 ```javascript
 //bad
@@ -225,7 +225,7 @@ class Gallery extends React.Component<void, GalleryProps, GalleryState> {
   )
  }
 }
-// Here the `Image` component is highly reusable and should be moved in it's own file
+// Here the `Image` component is highly reusable and should be moved to its own file
 
 //good
 const StudentAdaptiveResultRow = function(props: StudentAdaptiveResultRowProps): React.Element<any> {

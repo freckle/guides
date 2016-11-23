@@ -184,9 +184,177 @@ instance Monoid Mult where
   mappend = (*)
 ```
 
+## Phantom types
+
+The `Tagged` example above makes use of a phantom type variable. The definition of `Tagged` is:
+```haskell
+newtype Tagged t a = Tagged { untag :: a }
+```
+
+Note how the type variable `t` does not appear on the right-hand-side of the equals-sign. It's only used to add type-level information to a type - it's never used at the value level. We call this kind of type variable a phantom type variable, or occasionally, just a phantom type.
+
+A more useful example is hashing passwords. We might want to represent passwords as either raw text or hashed text and have operations that only work on one kind:
+
+```haskell
+module Password (Password, PasswordState, rawPassword, hashPassword, comparePassword) where
+
+import Data.Hash
+
+
+data PasswordState = Raw | Hashed
+
+newtype Password (s :: PasswordState) = Password Text
+
+rawPassword :: Text -> Password 'Raw
+rawPassword = Password
+
+-- Note: this hash is may be less secure than advertised
+secureHash :: Text -> Text
+secureHash t = reverse $ t ++ t
+
+hashPassword :: Password 'Raw -> Password 'Hashed
+hashPassword (Password r) = Password (secureHash r)
+
+comparePassword :: Password 'Raw -> Password 'Hashed -> Bool
+comparePassword (Password r) (Password h) = secureHash r == h
+```
+
+We're using a promoted datatype (`PasswordState`) to encode whether a `Password` is plaintext or hashed. Note that we do not expose the constructor for `Password`, and instead expose a smart constructor `rawPassword` and a hashing function `hashPassword`. If we expose the constructor, a malicious (or forgetful) user could construct a value of `Password 'Hashed` that contains a plaintext password.
+
+## GADTs
+
+Closely related to phantom types are Generalized Algebraic Data Types or GADTs. Suppose we had the following representation of a small programming language with integers, bools, addition, and conditions:
+```haskell
+data Expr
+  | I Int
+  | B Bool
+  | Add Expr Expr
+  | LessThan Expr Expr
+  | Cond Expr Expr Expr
+    deriving (Eq, Show)
+```
+
+We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's nothing preventing us from constructing values like `Add (I 1) (B True)`. Furthermore, we can only detect this kind of problem at runtime. Writing an evaluation function for this data type is frustrating:
+
+```haskell
+data Value
+  = VI Int
+  | VB Bool
+
+eval :: Expr -> Maybe Value
+eval (I i) = return $ VI i
+eval (B b) = return $ VB b
+eval (Add x y) =
+  VI x' <- eval x
+  VI y' <- eval y
+  return $ VI $ x' + y'
+eval (LessThan x y) =
+  VI x' <- eval x
+  VI y' <- eval y
+  return $ VB $ x' < y'
+eval (Cond c t f) =
+  VB c' <- eval c
+  if c'
+    then eval t
+    else eval f
+```
+
+We're relying on the `Monad` instance for `Maybe` to call `fail` on pattern match failures when we pass something like `Add (I 1) (B True)` at runtime. We also have to make an extra datatype to represent values.
+
+You can try to do something smarter with phantom types, existential quantification, and smart constructors:
+```haskell
+data Expr a
+  = I Int
+  | B Bool
+  | Add (Expr a) (Expr a)
+  | forall b. LessThan (Expr b) (Expr b)
+  | forall c. Cond (Expr c) (Expr a) (Expr a)
+
+int :: Int -> Expr Int
+int = I
+
+bool :: Bool -> Expr Bool
+bool = B
+
+add :: Expr Int -> Expr Int -> Expr Int
+add = Add
+
+lessThan :: Expr Int -> Expr Int -> Expr Bool
+lessThan = LessThan
+
+cond :: Expr Bool -> Expr a -> Expr a -> Expr a
+cond = Cond
+
+eval :: Expr a -> a
+eval (I i) = i
+eval (B b) = b
+eval (Add x y) = eval x + eval y
+eval (LessThan x y) = eval x < eval y
+eval (Cond c t f)
+  | eval c = eval t
+  | otherwise = eval f
+```
+
+Unfortunately this doesn't compile. You'll get errors like:
+```plaintext
+Couldn't match expected type ‘a’ with actual type ‘Bool’
+  ‘a’ is a rigid type variable bound by
+      the type signature for eval :: Expr a -> a at x.hs:57:9
+Relevant bindings include eval :: Expr a -> a (bound at x.hs:58:1)
+In the expression: b
+In an equation for ‘eval’: eval (B b) = b
+```
+
+Everything up to the `eval` function works, but then we don't have any evidence when matching `B b` that `b` is a `Bool`. We're not carrying that information around! 
+
+This is what GADTs are for - they let you carry around extra type evidence in your constructors:
+```haskell
+data Expr a where
+  I :: Int -> Expr Int
+  B :: Bool -> Expr Bool
+  Add :: Expr Int -> Expr Int -> Expr Int
+  LessThan :: Expr Int -> Expr Int -> Expr Bool
+  Cond :: Expr Bool -> Expr a -> Expr a -> Expr a
+
+deriving instance Eq a => Eq (Expr a)
+deriving instance Show a => Show (Expr a)
+
+eval :: Expr a -> a
+eval (I i) = i
+eval (B b) = b
+eval (Add x y) = eval x + eval y
+eval (LessThan x y) = eval x < eval y
+eval (Cond c t f)
+  | eval c = eval t
+  | otherwise = eval f
+```
+
+When we pattern match on `B` here, we gain access to evidence that `b` is a `Bool`, and so on for the other constructors. GHC won't even let us construct a value like `Add (I 1) (B True)`:
+```haskell
+Couldn't match type ‘Bool’ with ‘Int’
+ Expected type: Expr Int
+   Actual type: Expr Bool
+In the second argument of ‘Add’, namely ‘(B True)’
+In the expression: Add (I 1) (B True)
+```
+
+If you're curious how this works, you can dump the core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
+
+Note that the constructor's argument type does have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
+```haskell
+data Thing a where
+  ThingA :: Int -> Thing Bool
+  ThingB :: Bool -> Thing Int
+
+f :: Thing a -> a
+f (ThingA a) = a == 0
+f (ThingB b) = if b then 1 else 2
+```
 
 ## Appendix
 
 #### resources
 
 * http://nikita-volkov.github.io/profiling-cabal-projects/
+* [Don Stewart on Core](http://stackoverflow.com/a/6121495)
+* [Simon Peyton Jones on Core](https://youtu.be/uR_VzYxvbxg)

@@ -198,9 +198,6 @@ A more useful example is hashing passwords. We might want to represent passwords
 ```haskell
 module Password (Password, PasswordState, rawPassword, hashPassword, comparePassword) where
 
-import Data.Hash
-
-
 data PasswordState = Raw | Hashed
 
 newtype Password (s :: PasswordState) = Password Text
@@ -208,7 +205,7 @@ newtype Password (s :: PasswordState) = Password Text
 rawPassword :: Text -> Password 'Raw
 rawPassword = Password
 
--- Note: this hash is may be less secure than advertised
+-- Note: this hash may be less secure than advertised
 secureHash :: Text -> Text
 secureHash t = reverse $ t ++ t
 

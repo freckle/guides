@@ -241,15 +241,15 @@ data Value
 eval :: Expr -> Maybe Value
 eval (I i) = return $ VI i
 eval (B b) = return $ VB b
-eval (Add x y) =
+eval (Add x y) = do
   VI x' <- eval x
   VI y' <- eval y
   return $ VI $ x' + y'
-eval (LessThan x y) =
+eval (LessThan x y) = do
   VI x' <- eval x
   VI y' <- eval y
   return $ VB $ x' < y'
-eval (Cond c t f) =
+eval (Cond c t f) = do
   VB c' <- eval c
   if c'
     then eval t
@@ -302,7 +302,7 @@ In the expression: b
 In an equation for ‘eval’: eval (B b) = b
 ```
 
-Everything up to the `eval` function works, but then we don't have any evidence when matching `B b` that `b` is a `Bool`. We're not carrying that information around! 
+Everything up to the `eval` function works, but then we don't have any evidence when matching `B b` that `Expr a` should be `Expr Bool`. We're not carrying that information around! 
 
 This is what GADTs are for - they let you carry around extra type evidence in your constructors:
 ```haskell
@@ -326,7 +326,7 @@ eval (Cond c t f)
   | otherwise = eval f
 ```
 
-When we pattern match on `B` here, we gain access to evidence that `b` is a `Bool`, and so on for the other constructors. GHC won't even let us construct a value like `Add (I 1) (B True)`:
+When we pattern match on `B` here, we gain access to evidence that `Expr a` is `Expr Bool`, and so on for the other constructors. Furthermore, GHC won't even let us construct a value like `Add (I 1) (B True)`:
 ```haskell
 Couldn't match type ‘Bool’ with ‘Int’
  Expected type: Expr Int
@@ -335,7 +335,7 @@ In the second argument of ‘Add’, namely ‘(B True)’
 In the expression: Add (I 1) (B True)
 ```
 
-If you're curious how this works, you can dump the core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
+If you're curious how this works, you can dump the Core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
 
 Note that the constructor's argument type does have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
 ```haskell

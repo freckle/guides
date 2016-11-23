@@ -198,6 +198,9 @@ A more useful example is hashing passwords. We might want to represent passwords
 ```haskell
 module Password (Password, PasswordState, rawPassword, hashPassword, comparePassword) where
 
+import Data.Hash
+
+
 data PasswordState = Raw | Hashed
 
 newtype Password (s :: PasswordState) = Password Text
@@ -205,11 +208,15 @@ newtype Password (s :: PasswordState) = Password Text
 rawPassword :: Text -> Password 'Raw
 rawPassword = Password
 
+-- Note: this hash is may be less secure than advertised
+secureHash :: Text -> Text
+secureHash t = reverse $ t ++ t
+
 hashPassword :: Password 'Raw -> Password 'Hashed
-hashPassword (Password r) = Password (hash r)
+hashPassword (Password r) = Password (secureHash r)
 
 comparePassword :: Password 'Raw -> Password 'Hashed -> Bool
-comparePassword (Password r) (Password h) = hash r == h
+comparePassword (Password r) (Password h) = secureHash r == h
 ```
 
 We're using a promoted datatype (`PasswordState`) to encode whether a `Password` is plaintext or hashed. Note that we do not expose the constructor for `Password`, and instead expose a smart constructor `rawPassword` and a hashing function `hashPassword`. If we expose the constructor, a malicious (or forgetful) user could construct a value of `Password 'Hashed` that contains a plaintext password.

@@ -234,7 +234,7 @@ data Expr
     deriving (Eq, Show)
 ```
 
-We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's nothing preventing us from constructing values like `Add (I 1) (B True)`. Writing an evaluation function for this data type is frustrating:
+We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's nothing preventing us from constructing values like `Add (I 1) (B True)`. Furthermore, we can only detect this kind of problem at runtime. Writing an evaluation function for this data type is frustrating:
 
 ```haskell
 data Value
@@ -259,7 +259,7 @@ eval (Cond c t f) =
     else eval f
 ```
 
-We're relying on the `Monad` instance for for `Maybe` to call `fail` on pattern match failures when we pass something like `Add (I 1) (B True)`. We also have to make an extra datatype to represent values.
+We're relying on the `Monad` instance for `Maybe` to call `fail` on pattern match failures when we pass something like `Add (I 1) (B True)` at runtime. We also have to make an extra datatype to represent values.
 
 You can try to do something smarter with phantom types, existential quantification, and smart constructors:
 ```haskell
@@ -338,7 +338,7 @@ In the second argument of ‘Add’, namely ‘(B True)’
 In the expression: Add (I 1) (B True)
 ```
 
-If you're curious how this works, you can dump the core (`-ddump-simpl`) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
+If you're curious how this works, you can dump the core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
 
 Note that the constructor's argument type does have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
 ```haskell
@@ -356,3 +356,5 @@ f (ThingB b) = if b then 1 else 2
 #### resources
 
 * http://nikita-volkov.github.io/profiling-cabal-projects/
+* [Don Stewart on Core](http://stackoverflow.com/a/6121495)
+* [Simon Peyton Jones on Core](https://youtu.be/uR_VzYxvbxg)

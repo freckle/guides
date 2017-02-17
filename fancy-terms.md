@@ -10,14 +10,15 @@ As well as precision and brevity, fancy terms often give us access. There are co
 Every choice comes with benefits and costs. The cost of fancy terms is that anyone who uses one must be prepared to explain that term. This document attempts to briefly explain some of these fancy terms and provide some reason why they are beneficial.
 
 # The Terms
-* [arrow]
-* [morphism]
-* [domain]
-* [codomain]
-* [injective]
-* [surjective]
-* [bijective]
-* [isomorphism]
+* [arrow](#arrow)
+* [morphism](#morphism)
+* [object](#object)
+* [domain](#domain)
+* [codomain](#codomain)
+* [injective](#injective)
+* [surjective](#surjective)
+* [bijective](#bijective)
+* [isomorphism](#isomorphism)
 
 ## arrow
 Functional programmers sometimes talk about an arrow from `A` to `B`. There is a typeclass `Arrow`, but often we are just talking about something more abstract. We just want to say `A` is conceptually linked to `B` in a specific direction. An arrow could be a function, a process, a network transfer, a memo I wrote on a napkin; these details don't matter. All that matters is somehow we got from `A` to `B`. This conceptual brevity lets us take a step back and focus on the bigger picture. If I told you I drove a car from point `A` to `B` then you've already inferred a lot of detail that I might not have wanted to convey. Arrows let us focus less on implementation details and more on abstract attributes that we desire.

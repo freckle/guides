@@ -7,7 +7,7 @@ The reason we use "fancy" terms is because they are precise. We use the word `Mo
 As well as precision and brevity, fancy terms often give us access. There are combined hundreds of years of writing and research built in to these terms. They are the common language of logicians, mathemeticians, computer scientists and other academics who study complex problems. By utilizing these terms we give ourselves access to mountains of solutions to big problems. If you have a problem, it has probably already been solved or atleast researched to death by some lonely academic in a dark dusty corner speaking this foreign tongue of fancy terms.
 
 # What is the cost?
-Every choice comes with benefits and costs. The cost of fancy terms is that anyone who uses a one must be prepared to explain that term. This document attempts to briefly explain some of these fancy terms and provide some reason why they are beneficial.
+Every choice comes with benefits and costs. The cost of fancy terms is that anyone who uses one must be prepared to explain that term. This document attempts to briefly explain some of these fancy terms and provide some reason why they are beneficial.
 
 # The Terms
 * [arrow]

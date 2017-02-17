@@ -1,3 +1,4 @@
+# Fancy Terms
 Functional programmers borrow many terms from mathematics. These terms can cause a fair amount of anxiety for those who are not familiar. So why use them?
 
 # Why us them?
@@ -8,7 +9,7 @@ As well as precision and brevity, fancy terms often give us access. There are co
 # What is the cost?
 Every choice comes with benefits and costs. The cost of fancy terms is that anyone who uses a one must be prepared to explain that term. This document attempts to briefly explain some of these fancy terms and provide some reason why they are beneficial.
 
-# Fancy words
+# The Terms
 * [arrow]
 * [morphism]
 * [domain]

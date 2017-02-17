@@ -29,10 +29,10 @@ This is a fancy word for arrow used in category theory.
 OOP has co-opted the word object, but functional programmers still use it. Objects in OOP are members of a type, that encapsulated state, and have associated methods. In functional programming we throw away the state and methods. An object in FP is just a member of a type. `1` is an object of type `Int`. `"foo"` is an object of type `String`. Often we prefer to use the word value to avoid confusion, but mathematitions still like the word object.
 
 ## domain
-The left hand side of an arrow. I.E. all the possible arguments to a function. `Int` is the domain of `Int -> String`.
+The left hand side of an arrow. I.E. The types of the arguments to a function. `Int` is the domain of `Int -> String`.
 
 ## codomain
-The right hand side of an arrow. I.E. All the possible results of a function. `String` is the codomain of `Int -> String`
+The right hand side of an arrow. I.E. The type of the result of a function. `String` is the codomain of `Int -> String`
 
 ## injective
 An injective arrow is a one to one relationship in a single direction. The arrow `A -> B` is injective if all values in `A` have an arrow to `B` and distinct values in `A` never have an arrow to the same value in `B`. This does not mean that all values in `B` have a counterpart in `A`. The function `toDecimal :: Int -> Decimal` is injective because it will always result in a distinct value for every input, but there are strictly more `Decimal`s than `Int`s so the arrow only goes in one direction. An injective relationship is important because it means that we are not losing precision, but we might lose the ability to return to the original type.

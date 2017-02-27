@@ -323,7 +323,7 @@ Haskell's modules expose some variety in import style:
 * Qualified imports
 * Aliased imports
 
-Good style prefers
+Good style prefers:
 * Open imports for common libraries
   - base
   - mtl
@@ -337,8 +337,8 @@ Good style prefers
 * Aliased imports for packaging and exporting many modules in a single module.
   - creating a custom prelude
 
-### Good
 ```
+-- Good
 import Control.Lens hiding (at)
 import Control.Monad (forever)
 import Control.Monad.Logger (logInfoN, logErrorN)
@@ -346,22 +346,18 @@ import Control.Monad.Trans.Reader
 import Control.Monad.Trans.State
 import qualified Data.Map as Map
 import qualified Data.Text as Text
-```
 
-### Bad
-Overly open imports lead to increased ambiguity forcing common functions to be qualified.
-```
+-- Bad
+-- Overly open imports lead to increased ambiguity forcing common functions to be qualified.
 import Control.Lens
 import Control.Monad.Logger
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.State
 import Data.Map as Map
 import Data.Text as Text
-```
 
-### Bad
-Over qualification leads to increased line noise and length.
-```
+-- Bad
+-- Over qualification leads to increased line noise and length.
 import qualified Control.Lens as Lens
 import qualified Control.Monad.Logger as Logger
 import qualified Control.Monad.Trans.Reader as Reader

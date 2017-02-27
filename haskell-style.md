@@ -314,7 +314,7 @@ teacher =
     }
 ```
 
-## Imports and Progeny
+## Imports
 
 Haskell's modules expose some variety in import style:
 * Open imports

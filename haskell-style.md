@@ -116,7 +116,7 @@ Signatures should lead with arrows
 
 You should never need to align to preceding text. That is, your aligment point should always be 3rd, 5th, 7th etc. column (because we use two spaces of indenting).
 
-e.g. Instead of 
+e.g. Instead of
 
 ```haskell
 instance FromJSON (GameSession Never MathStandardAssignmentId) where
@@ -144,9 +144,9 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
 do
 ```haskell
 instance FromJSON (GameSession Never MathStandardAssignmentId) where
-  parseJSON = 
+  parseJSON =
     withObject "cannot parse GameSession" $ \o ->
-      GameSession 
+      GameSession
         <$> o .: "answers"
         <*> o .: "domain-id"
         <*> o .: "current-standard"
@@ -312,4 +312,80 @@ teacher =
     , schoolId = 123
     , hasPremium = True
     }
+```
+
+## Imports
+
+Haskell's modules expose some variety in import style:
+* Open imports
+* Explicit imports
+* Exclusionary imports
+* Qualified imports
+* Aliased imports
+
+Good style prefers:
+* Open imports for common libraries
+  - `base`
+  - `mtl`
+  - custom preludes
+* Explicit imports for bringing lesser known functions in to scope
+* Exclusionary imports for avoiding minor name clashes
+  - `lens`
+* Qualified imports for major name clashes
+  - `containers`
+  - `unordered-containers`
+* Aliased imports for packaging and exporting many modules in a single module.
+  - creating a custom prelude
+
+```haskell
+-- Good
+import Control.Lens hiding (at)
+import Control.Monad (forever)
+import Control.Monad.Logger (logInfoN, logErrorN)
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans.State
+import qualified Data.Map as Map
+import qualified Data.Text as Text
+
+-- Bad
+-- Overly open imports lead to increased ambiguity forcing common functions to be qualified.
+import Control.Lens
+import Control.Monad.Logger
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans.State
+import Data.Map as Map
+import Data.Text as Text
+
+-- Bad
+-- Over qualification leads to increased line noise and length.
+import qualified Control.Lens as Lens
+import qualified Control.Monad.Logger as Logger
+import qualified Control.Monad.Trans.Reader as Reader
+import qualified Control.Monad.Trans.State as State
+import qualified Data.Map as Map
+import qualified Data.Text as Text
+```
+
+### Importing types and qualifying
+It is also common to explicitly import types from a module and also import it qualified.
+```
+import Data.Map (Map)
+import qualified Data.Map as Map
+```
+
+### Abbreviating qualifications
+There are a number of common abbreviations that are used in the community to qualify imports.
+```haskell
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
+
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.Encoding as TL
+
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BSL
+import qualified Data.ByteString.Char8 as BS8
+import qualified Data.ByteString.Lazy.Char8 as BSL8
+
+import qualified Data.Sequence as Seq
 ```

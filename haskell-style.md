@@ -366,6 +366,13 @@ import qualified Data.Map as Map
 import qualified Data.Text as Text
 ```
 
+### Importing types and qualifying
+It is also common to explicitly import types from a module and also import it qualified.
+```
+import Data.Map (Map)
+import qualified Data.Map as Map
+```
+
 ### Abbreviating qualifications
 There are a number of common abbreviations that are used in the community to qualify imports.
 ```haskell

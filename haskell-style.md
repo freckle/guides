@@ -325,19 +325,19 @@ Haskell's modules expose some variety in import style:
 
 Good style prefers:
 * Open imports for common libraries
-  - base
-  - mtl
+  - `base`
+  - `mtl`
   - custom preludes
 * Explicit imports for bringing lesser known functions in to scope
 * Exclusionary imports for avoiding minor name clashes
-  - lens
+  - `lens`
 * Qualified imports for major name clashes
-  - containers
-  - unordered-containers
+  - `containers`
+  - `unordered-containers`
 * Aliased imports for packaging and exporting many modules in a single module.
   - creating a custom prelude
 
-```
+```haskell
 -- Good
 import Control.Lens hiding (at)
 import Control.Monad (forever)

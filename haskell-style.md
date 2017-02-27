@@ -365,3 +365,20 @@ import qualified Control.Monad.Trans.State as State
 import qualified Data.Map as Map
 import qualified Data.Text as Text
 ```
+
+### Abbreviating qualifications
+There are a number of common abbreviations that are used in the community to qualify imports.
+```haskell
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
+
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.Encoding as TL
+
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BSL
+import qualified Data.ByteString.Char8 as BS8
+import qualified Data.ByteString.Lazy.Char8 as BSL8
+
+import qualified Data.Sequence as Seq
+```

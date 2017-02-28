@@ -337,7 +337,7 @@ In the expression: Add (I 1) (B True)
 
 If you're curious how this works, you can dump the Core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
 
-Note that the constructor's argument type does have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
+Note that the constructor's argument type doesn't have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
 ```haskell
 data Thing a where
   ThingA :: Int -> Thing Bool

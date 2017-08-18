@@ -387,5 +387,7 @@ import qualified Data.ByteString.Lazy as BSL
 import qualified Data.ByteString.Char8 as BS8
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 
+import qualified Data.List.NonEmpty as NE
+
 import qualified Data.Sequence as Seq
 ```

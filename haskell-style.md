@@ -366,6 +366,27 @@ import qualified Data.Map as Map
 import qualified Data.Text as Text
 ```
 
+**NOTE**: if explicit imports exceed 80 columns, switch to a (sorted) list:
+
+```haskell
+-- Bad
+-- Long lines are hard to scan, inserting or removing an item is a noisier diff,
+-- and it's difficult to sort a horizontal list
+import System.IO (hPutStrLn, stderr, stdout, withFile, IOMode(..), hGetContents, hFlush, hClose)
+
+-- Good
+import System.IO
+  ( IOMode(..)
+  , hClose
+  , hFlush
+  , hGetContents
+  , hPutStrLn
+  , stderr
+  , stdout
+  , withFile
+  )
+```
+
 ### Importing types and qualifying
 It is also common to explicitly import types from a module and also import it qualified.
 ```
@@ -391,3 +412,134 @@ import qualified Data.List.NonEmpty as NE
 
 import qualified Data.Sequence as Seq
 ```
+
+### Import groups
+
+Imports should be divided into groups:
+
+1. Prelude (when explicit)
+1. Un-`qualified` dependency libraries
+1. `qualified` dependency libraries
+1. Un-`qualified` FrontRow libraries
+1. `qualified` FrontRow libraries
+1. Un-`qualified` modules from this library
+1. `qualified` modules from this libraries
+
+Aside from the empty line between groups, there should be no other whitespace.
+
+```haskell
+-- Bad
+-- What's coming from where?
+import ClassyPrelude
+import Network.AWS.S3
+import Network.AWS
+import Data.Text (Text)
+import Json
+import qualified Data.Text as T
+import Control.Lens
+import Unit
+import Data.Conduit
+import TextAssets.S3
+import Data.Set (Set)
+import qualified Data.Set as Set
+import Data.Map (Map)
+import qualified Data.Map as Map
+
+-- Bad
+-- You can't quickly highlight and :sort things
+import ClassyPrelude
+
+import Network.AWS.S3
+import Network.AWS
+import Data.Text (Text)
+import qualified Data.Text as T
+import Control.Lens
+import Data.Conduit
+import Data.Set (Set)
+import qualified Data.Set as Set
+import Data.Map (Map)
+import qualified Data.Map as Map
+
+import TextAssets.S3
+
+import Json (Json)
+import qualified Json as J
+import Unit
+
+-- Good
+import ClassyPrelude
+
+import Control.Lens
+import Data.Conduit
+import Data.Map (Map)
+import Data.Set (Set)
+import Data.Text (Text)
+import Network.AWS
+import Network.AWS.S3
+
+import qualified Data.Map as Map
+import qualified Data.Set as Set
+import qualified Data.Text as T
+
+import TextAssets.S3
+
+import Json (Json)
+import Unit
+
+import qualified Json as J
+```
+
+## Exports
+
+Use sorted, multi-line exports. There are two exceptions to this rule:
+
+1. A single-line export for `Main`, when it only exports `main`:
+
+   ```haskell
+   module Main (main) where
+   ```
+
+1. If the order of exports matters in your desired Haddock output, you may
+   violate sorting to achieve it.
+
+Otherwise:
+
+```haskell
+-- Bad
+module Driver (scienceOptions, socialStudiesOptions, mainWith) where
+
+-- Good
+module Driver
+  ( mainWith
+  , scienceOptions
+  , socialStudiesOptions
+  ) where
+```
+
+## Declaring Extensions
+
+- Declare extensions in the module(s) that use them, i.e. don't use
+  `default-extensions`
+
+  This ensures a) the source code works un-changed with other Haskell tooling
+  (e.g. `ghci`, `doctest`, etc) without further configuration and b) active
+  extensions are visible in the modules they impact.
+
+- Place extensions on their own line, and sort them
+
+  ```haskell
+  -- Bad
+  {-# LANGUAGE OverloadedStrings, RecordWildCards,
+      DataKinds #-}
+
+  -- Good
+  {-# LANGUAGE DataKinds #-}
+  {-# LANGUAGE OverloadedStrings #-}
+  {-# LANGUAGE RecordWildCards #-}
+  ```
+
+## Yesod
+
+When well-established Yesod idioms clash with the rules of this styleguide (e.g.
+the Yesod scaffold uses `default-extensions`), it is acceptable to follow the
+Yesod idioms and violate this style guide.

@@ -415,78 +415,59 @@ import qualified Data.Sequence as Seq
 
 ### Import groups
 
-Imports should be divided into groups:
+Put one blank line between `module`-`where` and the start of your `import`s. Put
+your preferred prelude (when explicit) first, followed by a blank line, then the
+rest of your imports.
 
-1. Prelude (when explicit)
-1. Un-`qualified` dependency libraries
-1. `qualified` dependency libraries
-1. Un-`qualified` FrontRow libraries
-1. `qualified` FrontRow libraries
-1. Un-`qualified` modules from this library
-1. `qualified` modules from this libraries
+Imports are sorted, but with `qualified` versions appearing where they would
+without the `qualified` word. If the same module appears un-`qualified` and
+`qualified`, the `qualified` version comes second.
 
-Aside from the empty line between groups, there should be no other whitespace.
 
 ```haskell
 -- Bad
--- What's coming from where?
-import ClassyPrelude
-import Network.AWS.S3
-import Network.AWS
+-- Improper spacing, improper sorting
+module Foo
+  ( bar
+  , baz
+  ) where
+import qualified Data.Map as Map
+import TextAssets.S3
 import Data.Text (Text)
+import Unit
 import Json
-import qualified Data.Text as T
 import Control.Lens
-import Unit
-import Data.Conduit
-import TextAssets.S3
-import Data.Set (Set)
 import qualified Data.Set as Set
-import Data.Map (Map)
-import qualified Data.Map as Map
-
--- Bad
--- You can't quickly highlight and :sort things
 import ClassyPrelude
-
 import Network.AWS.S3
-import Network.AWS
-import Data.Text (Text)
-import qualified Data.Text as T
-import Control.Lens
-import Data.Conduit
 import Data.Set (Set)
-import qualified Data.Set as Set
+import qualified Data.Text as T
+import Network.AWS
 import Data.Map (Map)
-import qualified Data.Map as Map
-
-import TextAssets.S3
-
-import Json (Json)
-import qualified Json as J
-import Unit
+import Data.Conduit
 
 -- Good
+module Foo
+  ( bar
+  , baz
+  ) where
+
 import ClassyPrelude
 
 import Control.Lens
 import Data.Conduit
 import Data.Map (Map)
+import qualified Data.Map as Map
 import Data.Set (Set)
+import qualified Data.Set as Set
 import Data.Text (Text)
+import qualified Data.Text as T
+import Json (Json)
+import qualified Json as J
 import Network.AWS
 import Network.AWS.S3
-
-import qualified Data.Map as Map
-import qualified Data.Set as Set
-import qualified Data.Text as T
-
 import TextAssets.S3
-
-import Json (Json)
 import Unit
-
-import qualified Json as J
 ```
 
 ## Exports
@@ -537,9 +518,3 @@ module Driver
   {-# LANGUAGE OverloadedStrings #-}
   {-# LANGUAGE RecordWildCards #-}
   ```
-
-## Yesod
-
-When well-established Yesod idioms clash with the rules of this styleguide (e.g.
-the Yesod scaffold uses `default-extensions`), it is acceptable to follow the
-Yesod idioms and violate this style guide.

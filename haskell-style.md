@@ -414,10 +414,20 @@ Put one blank line between `module`-`where` and the start of your `import`s. Put
 your preferred prelude (when explicit) first, followed by a blank line, then the
 rest of your imports.
 
-Imports are sorted, but with `qualified` versions appearing where they would
-without the `qualified` word. If the same module appears un-`qualified` and
-`qualified`, the `qualified` version comes second.
+The main `import` group should be maintained by our `stylish-haskell`
+configuration.
 
+For vim users,
+
+```vim
+:stylish-haskell %
+
+" or visually select the imports and
+:'<,'>!stylish-haskell
+```
+
+An example of its results at the time of this writing is shown below, but what
+it actually does is less important than the fact that it's automated.
 
 ```haskell
 -- Bad

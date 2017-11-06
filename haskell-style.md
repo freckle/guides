@@ -274,7 +274,7 @@ someBinding mx =
   f x y = x * x + y * y
 
 -- Good - use the same indentation for non-multi-line expressions to avoid
--- having to change anythign if/when they grow more lines
+-- having to change anything if/when they grow more lines
 someBinding mx = f <$> mx <*> mx
  where
   f x y = x * x + y * y

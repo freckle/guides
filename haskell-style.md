@@ -246,41 +246,36 @@ someBinding'' mx =
 ```
 
 #### Where bindings
+
+Expressions with `where`-bindings should place the body of the expression (if on
+the next line) and the `where`-bindings at the same (2-space) indentation, with
+the `where` keyword de-dented 1 space. Note that this causes an odd, 1-space
+indentation of the `where` keyword.
+
 ```haskell
--- We're pretty liberal with where bindings, but we mostly want to disallow this
--- because the `where` disappears
+-- Bad - the `where` disappears
 someBinding mx = f <$> mx <*> mx where f x y = x * x + y * y
 
--- And this because the alignment is fiddly
+-- Bad - the alignment is fiddly
 someBinding' mx = g $ f <$> mx <*> mx
   where f x y = x * x + y * y
         g = maybe 0 (*2)
 
--- Good - though note that we have odd-numbered indentation for the `where` itself
+-- OK, but dissallowed in the interest of consistency
+someBinding' mx = g $ f <$> mx <*> mx
+  where
+    f x y = x * x + y * y
+    g = maybe 0 (*2)
+
+-- Good
 someBinding mx =
   f <$> mx <*> mx
  where
   f x y = x * x + y * y
 
--- Good - this style is more in the spirit of context-free alignment
-someBinding' mx =
-  f <$> mx <*> mx
-    where
-      f x y = x * x + y * y
-
--- HOWEVER, it doesn't work with do blocks:
-someBinding'' mx my = do
-  x <- mx
-  y <- my
-  f x y
-   where -- PARSE ERROR - parser thinks this where is a part of the last expression
-    f x y = x * x + y * y
-
--- Instead, you have to do either this
-someBinding''' mx my = do
-  x <- mx
-  y <- my
-  f x y
+-- Good - use the same indentation for non-multi-line expressions to avoid
+-- having to change anything if/when they grow more lines
+someBinding mx = f <$> mx <*> mx
  where
   f x y = x * x + y * y
 ```
@@ -419,10 +414,20 @@ Put one blank line between `module`-`where` and the start of your `import`s. Put
 your preferred prelude (when explicit) first, followed by a blank line, then the
 rest of your imports.
 
-Imports are sorted, but with `qualified` versions appearing where they would
-without the `qualified` word. If the same module appears un-`qualified` and
-`qualified`, the `qualified` version comes second.
+The main `import` group should be maintained by our `stylish-haskell`
+configuration.
 
+For vim users,
+
+```vim
+:stylish-haskell %
+
+" or visually select the imports and
+:'<,'>!stylish-haskell
+```
+
+An example of its results at the time of this writing is shown below, but what
+it actually does is less important than the fact that it's automated.
 
 ```haskell
 -- Bad

@@ -92,7 +92,7 @@ fetchCourseMemberships (Entity teacherId teacher) =
     pure memberships
 ```
 
-We tolerate a few abbreviations as part of identifiers (e.g. the `num` portion of `numQuestionsAnswered`), but there doesn't seem to be any broad consensnus about this.
+We tolerate a few abbreviations as components of identifiers (e.g. the `num` portion of `numQuestionsAnswered`), but there doesn't seem to be any broad consensus about this.
 
 ## JavaScript
 

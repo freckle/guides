@@ -42,9 +42,10 @@ foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
 traverse :: (Applicative f, Traversable t) => (a -> f b) -> t a -> f (t b)
 ```
 
-`m` is always always `Monad`
+`m` is almost always `Monad` or something monad-transformer related
 ```haskell
 when :: Monad m => Bool -> m () -> m ()
+liftIO :: MonadIO m => IO a -> m a
 ```
 
 `s` is for state and `e` is for environment
@@ -57,7 +58,7 @@ These are conventions only, but picking something unusual for a common typeclass
 
 ### Concrete Types
 
-Avoid using single-letter names or abbreviations for values with a concrete type, especially if that type is domain-specific.
+Avoid using single-letter names or abbreviations for values with a concrete type, especially if that type is domain-specific. To crib from the [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/#fundamentals), "Clarity is more important than brevity."
 
 For example, don't do this:
 ```haskell 
@@ -91,7 +92,7 @@ fetchCourseMemberships (Entity teacherId teacher) =
     pure memberships
 ```
 
-One abbreviation we seem to tolerate is `num` as in `numQuestionsAnswered`. There may be others.
+We tolerate a few abbreviations as part of identifiers (e.g. the `num` portion of `numQuestionsAnswered`), but there doesn't seem to be any broad consensnus about this.
 
 ## JavaScript
 

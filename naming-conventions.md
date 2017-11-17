@@ -98,10 +98,91 @@ We tolerate a few abbreviations as components of identifiers (e.g. the `num` por
 
 JavaScript uses `camelCase` for identifiers and `TitleCase` for classes and React components. For flow types, we generally append a `T` to the end of the type, e.g. `SkillT`. Names that are being ignored should be prefixed with an underscore (e.g. `_teacher`, `_standard`). It's a common mistake (especially for Haskellers) to use a lone `_` and accidentally overwrite underscore in that scope.
 
-## Problems
+## {DRAFT} Interoperation Between Languages
 
-Serialization of string-enums to JSON and postgres is all over the place. We have examples of `snake_case`, `camelCase`, `TitleCase`, and `ALLCAPS`.
+JSON keys should always be `camelCase`. String enums that cross language barriers should be `snake_case`, since most enums that cross language barriers are designed for `postgres` first. Exceptions can be made for short initialisms which may be `ALLCAPS` (e.g. `TEKS: MathSystemT`). Short initialisms that are part of other identifiers should use `snake_case` (e.g. `rti_coordinator: TeacherRoleT`).
 
-If we have DB-level enums that are not shared with the frontend, it makes sense to use the postgres convention of `snake_case`. However, if we're planning to pass enums to the frontend, then we should use whatever the JavaScript convention is. JavaScript is also using pretty much everything, so it's hard to say what we should be using. I (Parks) usually use `TitleCase` for JavaScript-only enums, but only because that mimics Haskell enums.
+### Generating Enums from Haskell for Postgres
 
-Haskell pretty much enforces a style at the language-level by requiring that the first character of each constructor be capitalized. We're using `TitleCase` everywhere except for `MathSystem` and `DomainAbbreviation` which are `ALLCAPS`.
+Snake-case enum
+```haskell
+data TeacherRole
+  = Teacher
+  | RtiCoordinator
+  | ...
+
+-- Equivalent to
+--   mkPersistEnumUsing (snakeCaseify . unCapitalize) ''TeacherRole
+-- Produces
+--   'teacher'
+--   'rti_coordinator'
+--   ...
+mkPersistEnum ''TeacherRole
+```
+
+All-caps enum
+```haskell
+data MathSystem
+  = CCSS  -- Common Core Standard System
+  | TEKS  -- Texas Essential Knowledge and Skills
+  | ...
+  
+-- Produces
+-- 'CCSS'
+-- 'TEKS'
+mkPersistEnumUsing id ''MathSystem
+```
+
+### Generating Enums from Haskell for JavaScript
+
+Snake-case enum
+```haskell
+data TeacherRole
+  = Teacher
+  | RtiCoordinator
+  | ...
+
+-- Equivalent to
+--   deriveJSONEnumUsing (snakeCaseify . unCapitalize) ''TeacherRole
+-- Produces
+--   "teacher"
+--   "rti_coordinator"
+--   ...
+deriveJSONEnum ''TeacherRole
+```
+
+All-caps enum
+```haskell
+data MathSystem
+  = CCSS  -- Common Core Standard System
+  | TEKS  -- Texas Essential Knowledge and Skills
+  | ...
+  
+-- Produces
+-- "CCSS"
+-- "TEKS"
+-- ...
+deriveJSONEnumUsing id ''MathSystem
+```
+
+### Enums in JavaScript
+
+JavaScript enums should be typed using `flow`, e.g.:
+```jsx
+type TeacherRoleT
+  = 'teacher'
+  | 'rti_coordinator'
+  | ...
+```
+
+One is encouraged to make smart constructors for enums to reduce the risk of misspellings. `flow` usually catches misspellings, but not always.
+```jsx
+const TeacherRoles = {
+  Teacher: ('teacher': TeacherRoleT),
+  RtiCoordinator: ('rti_coordinator': TeacherRoleT),
+  ...
+}
+
+-- e.g.
+const role = TeacherRoles.Teacher
+```

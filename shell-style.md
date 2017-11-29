@@ -6,7 +6,7 @@
 
    [shellcheck]: https://www.shellcheck.net/
 
-   Add explicit annotations as needed. When adding new scripts confirm, that our
+   Add explicit annotations as needed. When adding new scripts, confirm that our
    CI machinery is configured to run on your files.
 
 1. All scripts end in a `.sh` extension
@@ -53,9 +53,9 @@ possible. This is not about portability, rather it's to reduce to scope of
 understanding required on the part of the reader by preferring simpler,
 more-common, and well-defined constructs.
 
-If you decide to use a Bashism, be consistent within that script. For example if
-you use `[[` because you want regex or glob matching in one place, don't use `[`
-in other places in the same script.
+If you decide to use a Bashism, be consistent within that script. For example,
+if you use `[[` because you want regex or glob matching in one place, don't use
+`[` in other places in the same script.
 
 ## Shell Options
 
@@ -151,7 +151,7 @@ in other places in the same script.
    foo=barbaz
    foo=$bar$baz
 
-   # But required fo
+   # But required for
    foo="bar baz"
    foo="$bar $baz"
    ```
@@ -212,7 +212,10 @@ in other places in the same script.
    # Bad
    ./some-script *.input.txt -o output.txt
 
-   # Good
+   # Better
+   ./some-script *.input.txt > output.txt
+
+   # Best
    for x in *.input.txt; do
      ./some-script < "$x"
    done > output.txt
@@ -234,6 +237,7 @@ in other places in the same script.
 
      # ...
    }
+   ```
 
    **Tip**: perform multiple assignments in one statement:
 
@@ -262,8 +266,8 @@ in other places in the same script.
    # use $tmp directory
    ```
 
-1. Only use `echo` for simplest case of `echo "static string"`, otherwise use
-   `printf`.
+1. Only use `echo` for the simplest case of `echo "static string"`, otherwise
+   use `printf`.
 
    `echo` with options, escapes, or variable interpolation is a portability
    nightmare. See [here][echo] as just one example reference.
@@ -309,13 +313,13 @@ Shells are frequently glue code, pulling together other tools such as `grep` or
 
 1. Use `grep -x`, not `grep '^foo$'`
 
-1. `grep re | awk { cmd }` can be `awk /re/ { cmd }`
+1. `grep re | awk '{ cmd }'` can be `awk '/re/ { cmd }'`
 
-1. `grep re | sed 's/re/x/' can be `sed '/re/!d; s//x/` (notice the reuse of
+1. `grep re | sed 's/re/x/'` can be `sed '/re/!d; s//x/'` (notice the reuse of
    `re` through an empty `s//`)
 
 1. `awk` is usually better than `cut` for splitting on whitespace; the former
-   handles tabs-separation better and has `$NF` available for "last"
+   handles tab-separation better and has `$NF` available for "last"
 
 ## When Not To Use Shell
 

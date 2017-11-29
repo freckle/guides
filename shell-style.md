@@ -75,8 +75,9 @@ if you use `[[` because you want regex or glob matching in one place, don't use
 
 2. Avoid `set -x`
 
-   Only use this if your script has no function definitions, control flow
-   structures, or conditional expressions -- otherwise it gets too noisy.
+   This option outputs every statement before it's executed. Only use this if
+   your script has no function definitions, control flow structures, or
+   conditional expressions; otherwise it is overly noisy.
 
    ```sh
    # Bad

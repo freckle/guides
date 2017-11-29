@@ -40,7 +40,7 @@
    scripts to run and selecting an explicit shell will ensure consistent
    behavior.
 
-1. Use `#!/usr/bin/env bash`
+1. Use `#!/usr/bin/env bash`, not `#!/bin/bash`
 
    This is specifically for OSX folks, where `/bin/bash` is severely out of
    date. A newer version, installed via Homebrew, may appear first in `$PATH`

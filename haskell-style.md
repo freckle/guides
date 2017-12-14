@@ -130,20 +130,34 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
                 <*> o .: "sub-sub-standard-perc"
                 <*> o .: "coins-gained"
                 <*> pure Never
- ```
-which will need cause a noisy diff if we rename `GameSession` (each following line also needs to be indented)
-```haskell
-instance FromJSON (GameSession Never MathStandardAssignmentId) where
-  parseJSON = withObject "cannot parse GameSession" $ \o ->
-    GameSession2 <$> o .: "answers"
-                 <*> o .: "domain-id"
-                 <*> o .: "current-standard"
-                 <*> o .: "sub-standard-perc"
-                 <*> o .: "sub-sub-standard-perc"
-                 <*> o .: "coins-gained"
-                 <*> pure Never
 ```
-do
+
+which will cause a noisy diff if we rename `GameSession` (each following line
+also needs to be indented):
+
+```diff
+
+ instance FromJSON (GameSession Never MathStandardAssignmentId) where
+   parseJSON = withObject "cannot parse GameSession" $ \o ->
+-   GameSession <$> o .: "answers"
+-               <*> o .: "domain-id"
+-               <*> o .: "current-standard"
+-               <*> o .: "sub-standard-perc"
+-               <*> o .: "sub-sub-standard-perc"
+-               <*> o .: "coins-gained"
+-               <*> pure Never
++   GameSession2 <$> o .: "answers"
++                <*> o .: "domain-id"
++                <*> o .: "current-standard"
++                <*> o .: "sub-standard-perc"
++                <*> o .: "sub-sub-standard-perc"
++                <*> o .: "coins-gained"
++                <*> pure Never
+
+```
+
+Instead, do
+
 ```haskell
 instance FromJSON (GameSession Never MathStandardAssignmentId) where
   parseJSON =
@@ -156,6 +170,21 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
         <*> o .: "sub-sub-standard-perc"
         <*> o .: "coins-gained"
         <*> pure Never
+```
+
+```diff
+ instance FromJSON (GameSession Never MathStandardAssignmentId) where
+   parseJSON =
+     withObject "cannot parse GameSession" $ \o ->
+-      GameSession
++      GameSession2
+         <$> o .: "answers"
+         <*> o .: "domain-id"
+         <*> o .: "current-standard"
+         <*> o .: "sub-standard-perc"
+         <*> o .: "sub-sub-standard-perc"
+         <*> o .: "coins-gained"
+         <*> pure Never
 ```
 
 ### More examples

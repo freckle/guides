@@ -187,6 +187,59 @@ instance FromJSON (GameSession Never MathStandardAssignmentId) where
          <*> pure Never
 ```
 
+### Operator-first
+
+The above is an example of operator-first style. Which we use generally, as in
+the following examples:
+
+```hs
+Foo
+  <$> o .: "this"
+  <*> o .: "that"
+
+foo
+  <&> foo .~ bar
+  <.> baz .~ bat
+```
+
+```hs
+fooBlahBlahHahaBlahBlahHaLongName
+  . barBlahBlahHahaBlahLongName
+  . bazBlahBlahHahaBlahHaLongName
+  $ bat quix
+
+Nothing -> left
+  $ Text.pack "could not find parser for node \""
+  <> name
+  <> Text.pack "\" of type \""
+  <> typ
+  <> Text.pack "\" at "
+  <> file
+  <> Text.pack (": " ++ show n ++ ".")
+
+logForwarderLambda :: Text -> Resource
+logForwarderLambda envName = resource "LogForwarderLambda"
+  $ LambdaFunctionProperties
+  $ lambdaFunction
+    ( lambdaFunctionCode
+    & lfcS3Bucket ?~ "frontrow-ops"
+    & lfcS3Key ?~ "logdna-lambda.zip"
+    )
+    "logdna_cloudwatch.lambda_handler"
+    (GetAtt "LambdaRole" "Arn")
+    (Literal Python27)
+  & lfFunctionName ?~ Literal (envName <> "-log-dna-forwarder")
+  & lfEnvironment ?~
+    ( lambdaFunctionEnvironment
+    & lfeVariables ?~
+      [ ("LOGDNA_KEY", toJSON (Ref "LogDNAIngestionKey" :: Val Text))
+      ]
+    )
+```
+
+This is consistent with comma-first style for structural expressions, and is
+generally easier to read in long functional expressions.
+
 ### More examples
 
 #### Data declarations

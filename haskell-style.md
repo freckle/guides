@@ -114,7 +114,9 @@ Signatures should lead with arrows
 
 ## Alignment
 
-You should never need to align to preceding text. That is, your aligment point should always be 3rd, 5th, 7th etc. column (because we use two spaces of indenting).
+You should never need to align to preceding text. That is, your alignment point
+should always be 3rd, 5th, 7th etc. column (because we use two spaces of
+indenting).
 
 e.g. Instead of
 

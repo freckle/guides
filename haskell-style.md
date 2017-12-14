@@ -523,3 +523,27 @@ module Driver
   {-# LANGUAGE OverloadedStrings #-}
   {-# LANGUAGE RecordWildCards #-}
   ```
+
+- Leave a blank line after the extensions list
+
+  ```haskell
+  {-# LANGAUGE OverloadedStrings #-}
+
+  module Foo
+    ( foo
+    ) where
+
+  ```
+
+  ```haskell
+  {-# LANGAUGE OverloadedStrings #-}
+
+  -- |
+  --
+  -- The Foo module does the foo-ing
+  --
+  module Foo
+    ( foo
+    ) where
+
+  ```

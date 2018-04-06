@@ -588,12 +588,29 @@ module Driver
 
 ## Declaring Extensions
 
-- Declare extensions in the module(s) that use them, i.e. don't use
-  `default-extensions`
+- All Haskell packages MUST use the following `default-extensions`:
 
-  This ensures a) the source code works un-changed with other Haskell tooling
-  (e.g. `ghci`, `doctest`, etc) without further configuration and b) active
-  extensions are visible in the modules they impact.
+  ```yaml
+  default-extensions:
+    - BangPatterns
+    - DeriveGeneric
+    - LambdaCase
+    - NoImplicitPrelude
+    - NoMonomorphismRestriction
+    - OverloadedStrings
+    - RankNTypes
+    - RecordWildCards
+    - ScopedTypeVariables
+    - TypeApplications
+    - TypeFamilies
+  ```
+
+  **NOTE**: `NoImplicitPrelude` may be omitted in packages using the normal,
+  implicit `Prelude` everywhere.
+
+  This defines a consistent, and minimally-extended Haskell environment. Other
+  extensions MUST be defined via LANGUAGE pragmas in the modules where they're
+  needed.
 
 - Place extensions on their own line, and sort them
 

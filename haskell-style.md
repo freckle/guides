@@ -593,7 +593,14 @@ module Driver
   ```yaml
   default-extensions:
     - BangPatterns
+    - DeriveAnyClass
+    - DeriveFoldable
+    - DeriveFunctor
     - DeriveGeneric
+    - DeriveLift
+    - DeriveTraversable
+    - DerivingStrategies
+    - GeneralizedNewtypeDeriving
     - LambdaCase
     - NoImplicitPrelude
     - NoMonomorphismRestriction
@@ -601,6 +608,7 @@ module Driver
     - RankNTypes
     - RecordWildCards
     - ScopedTypeVariables
+    - StandaloneDeriving
     - TypeApplications
     - TypeFamilies
   ```

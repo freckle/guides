@@ -600,8 +600,12 @@ module Driver
     - DeriveLift
     - DeriveTraversable
     - DerivingStrategies
+    - FlexibleContexts
+    - FlexibleInstances
+    - GADTs
     - GeneralizedNewtypeDeriving
     - LambdaCase
+    - MultiParamTypeClasses
     - NoImplicitPrelude
     - NoMonomorphismRestriction
     - OverloadedStrings

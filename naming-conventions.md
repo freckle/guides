@@ -115,6 +115,22 @@ We tolerate a few abbreviations as components of identifiers (e.g. the `num`
 portion of `numQuestionsAnswered`), but there doesn't seem to be any broad
 consensus about this.
 
+### Database Access
+
+We use the prefix `fetch` to signal retrieving data from the database.
+
+Don't do this:
+
+```
+getAnswers :: SqlReadT [Answer]
+```
+
+Do this:
+
+```
+fetchAnswers :: SqlReadT [Answer]
+```
+
 ## JavaScript
 
 JavaScript uses `camelCase` for identifiers and `TitleCase` for classes and

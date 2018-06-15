@@ -660,3 +660,329 @@ module Driver
     ) where
 
   ```
+
+## Haddocks
+
+Haskell modules should be commented with valid Haddock documentation. We are not
+yet requiring a certain level of coverage, but it is strongly encouraged.
+
+### General guides
+
+- Use proper Haddock [markup][]
+- Link all identifiers, anywhere they appear
+
+  Bad
+
+  ```hs
+  -- | Construct a @'FlipFlop'@
+  --
+  -- If the size is right, you will get a @Right FlipFlop@, otherwise a @Left@
+  --
+  ```
+
+  Good
+
+  ```hs
+  -- | Construct a @'FlipFlop'@
+  --
+  -- If the size is right, you will get a @'Right' 'FlipFlop'@, otherwise a
+  -- @'Left'@.
+  --
+  ```
+
+- Use leading documentation (`-- |`) for top-level definitions and trailing
+  documentation (`-- ^`) for record attributes and function arguments
+
+  Bad
+
+  ```hs
+  data Foo = Foo
+    {
+    -- | Foo's foo
+      fooFoo :: Foo
+    -- | Foo's bar
+    , fooBar :: Bar
+    }
+  -- ^ What even is a Foo?
+  ```
+
+  Good
+
+  ```hs
+  -- | What even is a Foo?
+  data Foo = Foo
+    { fooFoo :: Foo
+    -- ^ Foo's foo
+    , fooBar :: Bar
+    -- ^ Foo's bar
+    }
+  ```
+
+  Best, for this case
+
+  ```hs
+  -- | What even is a Foo?
+  data Foo = Foo
+    { fooFoo :: Foo -- ^ Foo's foo
+    , fooBar :: Bar -- ^ Foo's bar
+    }
+  ```
+
+  **NOTE**: do not align trailing documentation in context-sensitive ways.
+
+  Bad
+
+  ```hs
+  -- | What even is a Foo?
+  data Foo = Foo
+    { fooFoos :: [Foo] -- ^ Foo's foos
+    , fooBar :: Bar    -- ^ Foo's bar
+    }
+  ```
+
+  Good
+
+  ```hs
+  data Foo = Foo
+    { fooFoos :: [Foo] -- ^ Foo's foos
+    , fooBar :: Bar -- ^ Foo's bar
+    }
+  ```
+
+### Summaries
+
+Summaries must be a single, short (e.g. non-wrapping), capitalized sentence; not
+punctuated, and in a declarative tense.
+
+A Summary should complete the sentence:
+
+> This (module|type|attribute|function|argument)... {Summary}
+
+Most rules that would apply to [commit messages][tbaggery] apply here.
+
+Bad
+
+```hs
+-- | Be careful here, this is tricky!
+
+-- | Here we're returning the Admins that can access the other thing by virtue
+-- of the fact that they are this thing
+
+-- | Does a thing. Is partial because of random reason
+```
+
+Good
+
+```hs
+-- | Represents a value that may or may not be present
+{- This type represents a value... -}
+
+-- | Updates all Admins to @'isVerified' = 'True'@
+{- This function updates all admins... -}
+
+-- | Returns the head of a non-empty list, or raises an exception
+{- This function returns the... -}
+```
+
+### Body
+
+Bodies are optional but encouraged. When present, the following applies:
+
+- Wrap non-literal content at 80 columns (not our usual 120)
+- Surround block elements by a line of whitespace
+
+  Bad
+
+  ```hs
+  -- | The docs
+  -- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  -- veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  -- commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+  -- velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+  -- cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+  -- est laborum.
+  theFunction
+
+  -- | The docs
+  --
+  -- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  -- veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  -- commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+  -- velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+  -- cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+  -- est laborum.
+  theFunction
+
+  -- | The docs
+  --
+  -- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  -- veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  -- commodo consequat.
+  -- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+  -- dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  -- proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  theFunction
+  ```
+
+  Good
+
+  ```hs
+  -- | The docs
+  --
+  -- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  -- veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  -- commodo consequat.
+  --
+  -- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+  -- dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  -- proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  --
+  theFunction
+  ```
+
+- Lists receive a hanging indent
+
+  Bad
+
+  ```hs
+  -- | The docs
+  --
+  -- 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  -- veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  -- commodo consequat.
+  -- 2. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+  -- dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  -- proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  --
+  theFunction
+  ```
+
+  Good
+
+  ```hs
+  -- | The docs
+  --
+  -- 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+  --    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+  --    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+  --    commodo consequat.
+  -- 2. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+  --    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  --    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  --
+  theFunction
+  ```
+
+### Module organization
+
+- Organize your exports by logical groups or progressive disclosure and use
+  section headings
+
+  Bad
+
+  ```hs
+  module Foo
+    ( getFoo
+    , updateBar
+    , internalDeleteFoo
+    , deleteFoo
+    )
+  ```
+
+  Good
+
+  ```hs
+  module Foo
+    (
+    -- * Foo
+      getFoo
+    , deleteFoo
+
+    -- * Bar
+    , updateBar
+
+    -- * Internal, exported for testing
+    , internalDeleteFoo
+    )
+  ```
+
+- Consider adding section documentation
+
+  **NOTE**: Summary/Body rules apply!
+
+  ```hs
+  module Foo
+    (
+    -- * Foo
+    -- | Operates on Foos
+      getFoo
+    , deleteFoo
+
+    -- * Bar
+    -- | Operates on Bars
+    , updateBar
+
+    -- * Internal
+    -- | Exported for testing only
+    --
+    -- Do not use these, unstable API.
+    --
+    , internalDeleteFoo
+    )
+  ```
+
+- If you want to separate the definitions *in* the module, use [named
+  chunks][chunks].
+
+  ```hs
+  module Foo
+    (
+    -- * Foo
+    -- $foo
+      getFoo
+    , deleteFoo
+
+    -- * Bar
+    -- $bar
+    , updateBar
+
+    -- * Internal
+    -- $internal
+    , internalDeleteFoo
+    ) where
+
+  -- $foo
+  -- Operates on Foos
+
+  data Foo
+
+  getFoo
+
+  deleteFoo
+
+  -- $bar
+  -- Operates on Bars
+
+  data Bar
+
+  updateBar
+
+  -- $internal
+  -- Exported for testing only
+  --
+  -- Do not use these, unstable API.
+  --
+
+  data DeleteAction
+
+  internalDeleteFoo
+  ```
+
+[markup]: https://www.haskell.org/haddock/doc/html/ch03s08.html
+[chunks]: https://www.haskell.org/haddock/doc/html/ch03s05.html
+[tbaggery]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

@@ -736,7 +736,6 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  -- | A mispelling of fu to avoid detection when coupled with Bar
   data Foo
     = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
@@ -750,6 +749,36 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   data Foo
     = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
+    , fooBar :: Bar -- ^ Foo's bar
+    }
+  ```
+
+  And apply Summary/Body rules for long trailing documentation.
+
+  Bad
+
+  ```hs
+  data Foo
+    = Foo
+    { fooFoos :: [Foo] -- ^ Foo's foos is getting really long and might be
+                       -- multiple sentences. You might want to go
+                       -- context-sensitive too!
+    , fooBar :: Bar -- ^ Foo's bar
+    }
+  ```
+
+  Good
+
+  ```hs
+  data Foo
+    = Foo
+    { fooFoos :: [Foo]
+    -- ^ Foo's foos
+    --
+    -- We now need a Body, and all the usual rules apply. It's getting really
+    -- long but we aren't context-sensitive and we can easily wrap. Don't forget
+    -- the surrounding whitespace!
+    --
     , fooBar :: Bar -- ^ Foo's bar
     }
   ```

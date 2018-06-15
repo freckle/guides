@@ -703,13 +703,13 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
     -- | Foo's bar
     , fooBar :: Bar
     }
-  -- ^ What even is a Foo?
+  -- ^ A mispelling of fu to avoid detection when coupled with Bar
   ```
 
   Good
 
   ```hs
-  -- | What even is a Foo?
+  -- | A mispelling of fu to avoid detection when coupled with Bar
   data Foo = Foo
     { fooFoo :: Foo
     -- ^ Foo's foo
@@ -721,7 +721,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Best, for this case
 
   ```hs
-  -- | What even is a Foo?
+  -- | A mispelling of fu to avoid detection when coupled with Bar
   data Foo = Foo
     { fooFoo :: Foo -- ^ Foo's foo
     , fooBar :: Bar -- ^ Foo's bar
@@ -733,7 +733,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  -- | What even is a Foo?
+  -- | A mispelling of fu to avoid detection when coupled with Bar
   data Foo = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
     , fooBar :: Bar    -- ^ Foo's bar

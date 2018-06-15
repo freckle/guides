@@ -696,7 +696,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  data Foo = Foo
+  data Foo
+    = Foo
     {
     -- | Foo's foo
       fooFoo :: Foo
@@ -710,7 +711,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
   ```hs
   -- | A mispelling of fu to avoid detection when coupled with Bar
-  data Foo = Foo
+  data Foo
+    = Foo
     { fooFoo :: Foo
     -- ^ Foo's foo
     , fooBar :: Bar
@@ -722,7 +724,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
   ```hs
   -- | A mispelling of fu to avoid detection when coupled with Bar
-  data Foo = Foo
+  data Foo
+    = Foo
     { fooFoo :: Foo -- ^ Foo's foo
     , fooBar :: Bar -- ^ Foo's bar
     }
@@ -734,7 +737,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
   ```hs
   -- | A mispelling of fu to avoid detection when coupled with Bar
-  data Foo = Foo
+  data Foo
+    = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
     , fooBar :: Bar    -- ^ Foo's bar
     }
@@ -743,7 +747,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Good
 
   ```hs
-  data Foo = Foo
+  data Foo
+    = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
     , fooBar :: Bar -- ^ Foo's bar
     }

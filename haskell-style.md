@@ -780,13 +780,10 @@ Good
 
 ```hs
 -- | Represents a value that may or may not be present
-{- This type represents a value... -}
 
 -- | Updates all Admins to @'isVerified' = 'True'@
-{- This function updates all admins... -}
 
 -- | Returns the head of a non-empty list, or raises an exception
-{- This function returns the... -}
 ```
 
 ### Body

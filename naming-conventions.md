@@ -7,6 +7,53 @@ Postgres uses `snake_case`. Tables should be plural (e.g. `teachers`,
 abbreviations and math system which are `ALLCAPS`), though this makes
 interoperating with Haskell and JavaScript non-obvious.
 
+### Foreign Keys
+
+If a table has a foreign key to another table, remove the _product_ and
+_subject_ prefix from the foreign key column's name unless doing so would
+introduce ambiguity.
+
+Don't do this:
+
+```sql
+CREATE TABLE ela_adaptive_skill_practice_paragraphs (
+  id integer PRIMARY KEY NOT NULL,
+  ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+  type text NOT NULL,
+  content text NOT NULL,
+  caption text,
+  position integer NOT NULL,
+  UNIQUE (ela_adaptive_skill_practice_content_id, position),
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+);
+```
+
+Do this:
+
+```diff
+CREATE TABLE ela_adaptive_skill_practice_paragraphs (
+  id integer PRIMARY KEY NOT NULL,
+- ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
++ content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+  type text NOT NULL,
+  content text NOT NULL,
+  caption text,
+  position integer NOT NULL,
+  UNIQUE (ela_adaptive_skill_practice_content_id, position),
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+);
+```
+
+#### Why?
+
+We only need to convey that this field is a pointer to "content". Any other
+information we could encode can be understood from context. Furthermore, the
+elided information is more likely to change. In fact, we no longer refer to
+this product as "AdaptiveSkillPractice". It's just "SkillsPractice" now.
+However, because we've encoded superfluous information in the column, the
+Haskell and JSON representations do too, which makes changing it a multi-step
+process.
+
 ## Haskell
 
 Haskell uses `camelCase` for identifiers and `TitleCase` for types and
@@ -135,7 +182,10 @@ fetchAnswers :: SqlReadT [Answer]
 
 Use [`mkPersist`](mkPersist) from [`persistent`](persistent) to generate record
 types corresponding to database tables. [`sqlSettings`](sqlSettings) will
-autoprefix each field with the record's name. For example:
+autoprefix each field with the record's name. Note that the field names given
+in the `persistLowerCase` quasiquotation should exactly match the corresponding
+column name in the database table except that the former is `camelCase` and the
+latter is `snake_case` (see [Postgres](#Postgres) above). For example:
 
 ```haskell
 share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
@@ -175,50 +225,6 @@ This will produce the following JSON:
 , "age": 29
 }
 ```
-
-#### Foreign Keys
-
-If an entity has foreign keys to another entity, remove as much of the _product_
-and _subject_ prefix in that entity's name as possible without introducing ambiguity.
-
-Don't do this:
-
-```haskell
-share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
-MathStandardAssignmentSession sql=math_standard_assignment_sessions
-  studentId StudentId
-  mathStandardAssignmentId MathStandardAssignmentId
-  createdAt UTCTime
-  completedAt UTCTime Maybe
-  durationSeconds DurationSeconds Maybe
-  numQuestionsAnswered Natural Maybe
-  deriving Show Read Eq Ord Generic
-|]
-```
-
-Do this:
-
-```diff
-share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
-MathStandardAssignmentSession sql=math_standard_assignment_sessions
-  studentId StudentId
-- mathStandardAssignmentId MathStandardAssignmentId
-+ assignmentId MathStandardAssignmentId
-  createdAt UTCTime
-  completedAt UTCTime Maybe
-  durationSeconds DurationSeconds Maybe
-  numQuestionsAnswered Natural Maybe
-  deriving Show Read Eq Ord Generic
-|]
-```
-
-##### Why?
-
-We only need to convey that this field is a pointer to another assignment. Any
-other information we could encode can be understood from context. Furthermore,
-the elided information is more likely to change. A `MathStandardAssignment`
-might become a `MathTargetedAssignment`, but it probably won't stop being an
-assignment.
 
 ## JavaScript
 
@@ -264,7 +270,7 @@ data MathSystem
   = CCSS  -- Common Core Standard System
   | TEKS  -- Texas Essential Knowledge and Skills
   | ...
-  
+
 -- Produces
 -- 'CCSS'
 -- 'TEKS'
@@ -297,7 +303,7 @@ data MathSystem
   = CCSS  -- Common Core Standard System
   | TEKS  -- Texas Essential Knowledge and Skills
   | ...
-  
+
 -- Produces
 -- "CCSS"
 -- "TEKS"

@@ -131,6 +131,95 @@ Do this:
 fetchAnswers :: SqlReadT [Answer]
 ```
 
+### Database Entities
+
+Use [`mkPersist`](mkPersist) from [`persistent`](persistent) to generate record
+types corresponding to database tables. [`sqlSettings`](sqlSettings) will
+autoprefix each field with the record's name. For example:
+
+```haskell
+share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
+User sql=users
+  name Text
+  age Natural
+  deriving Eq Show Ord Generic
+|]
+```
+
+will generate a data declaration that looks like this:
+
+```haskell
+data User = User
+  { userName :: Text
+  , userAge :: Natural
+  }
+  deriving (Eq, Show, Ord, Generic)
+```
+
+Entities that are meant to appear in API requests or responses should have JSON
+instances that strip the prefixes:
+
+```haskell
+instance ToJSON User where
+  toEncoding = genericToEncoding (unPrefix "user")
+  toJSON = genericToJSON (unPrefix "user")
+
+instance FromJSON User where
+  parseJSON = genericParseJSON (unPrefix "user")
+```
+
+This will produce the following JSON:
+
+```haskell
+{ "name": "Joe"
+, "age": 29
+}
+```
+
+#### Foreign Keys
+
+If an entity has foreign keys to another entity, remove as much of the _product_
+and _subject_ prefix in that entity's name as possible without introducing ambiguity.
+
+Don't do this:
+
+```haskell
+share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
+MathStandardAssignmentSession sql=math_standard_assignment_sessions
+  studentId StudentId
+  mathStandardAssignmentId MathStandardAssignmentId
+  createdAt UTCTime
+  completedAt UTCTime Maybe
+  durationSeconds DurationSeconds Maybe
+  numQuestionsAnswered Natural Maybe
+  deriving Show Read Eq Ord Generic
+|]
+```
+
+Do this:
+
+```diff
+share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
+MathStandardAssignmentSession sql=math_standard_assignment_sessions
+  studentId StudentId
+- mathStandardAssignmentId MathStandardAssignmentId
++ assignmentId MathStandardAssignmentId
+  createdAt UTCTime
+  completedAt UTCTime Maybe
+  durationSeconds DurationSeconds Maybe
+  numQuestionsAnswered Natural Maybe
+  deriving Show Read Eq Ord Generic
+|]
+```
+
+##### Why?
+
+We only need to convey that this field is a pointer to another assignment. Any
+other information we could encode can be understood from context. Furthermore,
+the elided information is more likely to change. A `MathStandardAssignment`
+might become a `MathTargetedAssignment`, but it probably won't stop being an
+assignment.
+
 ## JavaScript
 
 JavaScript uses `camelCase` for identifiers and `TitleCase` for classes and
@@ -240,3 +329,7 @@ const TeacherRoles = {
 -- e.g.
 const role = TeacherRoles.Teacher
 ```
+
+[mkPersist]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
+[persistent]: http://hackage.haskell.org/package/persistent
+[sqlSettings]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings

@@ -185,7 +185,7 @@ types corresponding to database tables. [`sqlSettings`](sqlSettings) will
 autoprefix each field with the record's name. Note that the field names given
 in the `persistLowerCase` quasiquotation should exactly match the corresponding
 column name in the database table except that the former is `camelCase` and the
-latter is `snake_case` (see [Postgres](#Postgres) above). For example:
+latter is `snake_case` (see [Postgres](#postgres) above). For example:
 
 ```haskell
 share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|

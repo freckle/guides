@@ -7,6 +7,53 @@ Postgres uses `snake_case`. Tables should be plural (e.g. `teachers`,
 abbreviations and math system which are `ALLCAPS`), though this makes
 interoperating with Haskell and JavaScript non-obvious.
 
+### Foreign Keys
+
+If a table has a foreign key to another table, remove the _product_ and
+_subject_ prefix from the foreign key column's name unless doing so would
+introduce ambiguity.
+
+Don't do this:
+
+```sql
+CREATE TABLE ela_adaptive_skill_practice_paragraphs (
+  id integer PRIMARY KEY NOT NULL,
+  ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+  type text NOT NULL,
+  content text NOT NULL,
+  caption text,
+  position integer NOT NULL,
+  UNIQUE (ela_adaptive_skill_practice_content_id, position),
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+);
+```
+
+Do this:
+
+```diff
+CREATE TABLE ela_adaptive_skill_practice_paragraphs (
+  id integer PRIMARY KEY NOT NULL,
+- ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
++ content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+  type text NOT NULL,
+  content text NOT NULL,
+  caption text,
+  position integer NOT NULL,
+  UNIQUE (ela_adaptive_skill_practice_content_id, position),
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+);
+```
+
+#### Why?
+
+We only need to convey that this field is a pointer to "content". Any other
+information we could encode can be understood from context. Furthermore, the
+elided information is more likely to change. In fact, we no longer refer to
+this product as "AdaptiveSkillPractice". It's just "SkillsPractice" now.
+However, because we've encoded superfluous information in the column, the
+Haskell and JSON representations do too, which makes changing it a multi-step
+process.
+
 ## Haskell
 
 Haskell uses `camelCase` for identifiers and `TitleCase` for types and
@@ -131,6 +178,54 @@ Do this:
 fetchAnswers :: SqlReadT [Answer]
 ```
 
+### Database Entities
+
+Use [`mkPersist`](mkPersist) from [`persistent`](persistent) to generate record
+types corresponding to database tables. [`sqlSettings`](sqlSettings) will
+autoprefix each field with the record's name. Note that the field names given
+in the `persistLowerCase` quasiquotation should exactly match the corresponding
+column name in the database table except that the former is `camelCase` and the
+latter is `snake_case` (see [Postgres](#Postgres) above). For example:
+
+```haskell
+share [mkPersist sqlSettings, mkMigrate "migration"] [persistLowerCase|
+User sql=users
+  name Text
+  age Natural
+  deriving Eq Show Ord Generic
+|]
+```
+
+will generate a data declaration that looks like this:
+
+```haskell
+data User = User
+  { userName :: Text
+  , userAge :: Natural
+  }
+  deriving (Eq, Show, Ord, Generic)
+```
+
+Entities that are meant to appear in API requests or responses should have JSON
+instances that strip the prefixes:
+
+```haskell
+instance ToJSON User where
+  toEncoding = genericToEncoding (unPrefix "user")
+  toJSON = genericToJSON (unPrefix "user")
+
+instance FromJSON User where
+  parseJSON = genericParseJSON (unPrefix "user")
+```
+
+This will produce the following JSON:
+
+```haskell
+{ "name": "Joe"
+, "age": 29
+}
+```
+
 ## JavaScript
 
 JavaScript uses `camelCase` for identifiers and `TitleCase` for classes and
@@ -175,7 +270,7 @@ data MathSystem
   = CCSS  -- Common Core Standard System
   | TEKS  -- Texas Essential Knowledge and Skills
   | ...
-  
+
 -- Produces
 -- 'CCSS'
 -- 'TEKS'
@@ -208,7 +303,7 @@ data MathSystem
   = CCSS  -- Common Core Standard System
   | TEKS  -- Texas Essential Knowledge and Skills
   | ...
-  
+
 -- Produces
 -- "CCSS"
 -- "TEKS"
@@ -240,3 +335,7 @@ const TeacherRoles = {
 -- e.g.
 const role = TeacherRoles.Teacher
 ```
+
+[mkPersist]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
+[persistent]: http://hackage.haskell.org/package/persistent
+[sqlSettings]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings

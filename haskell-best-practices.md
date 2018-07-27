@@ -13,6 +13,67 @@
      x `divEx` d = x / d
  ```
 
+### Avoid `MonadFail`
+
+Don't write our own functions using `MonadFail`/`fail`.
+
+**Bad**:
+
+```hs
+data Email = Email
+
+parseEmail :: MonadFail m => Text -> m Email
+parseEmail = undefined
+
+instance FromJSON Email where
+  parseJSON = withText "Email" parseEmail
+```
+
+This looks convenient:
+
+```hs
+parseEmail "..." :: Maybe Email -- fail as Nothing
+parseEmail "..." :: IO Email -- fail as throw
+```
+
+It would be reasonable to think you can also:
+
+```hs
+parseEmail "..." :: Either String Email -- fail as Left
+```
+
+And that *may* work, but it depends on a lot of implicit context and has
+surprising *run-time* failure modes:
+
+For the above to work, there would need to be a `MonadFail` instance for `Either
+String` in scope that defines `fail = Left`. That itself is not hugely
+problematic, but *when there isn't* the resulting behavior further depends on if
+you've `import`ed `Control.Monad.Fail` or not. If you *have* you'll get a
+compile-time "no instance for (MonadFail (Either String))" error. Nice. But if
+you *haven't*, you'll implicitly get `Monad(fail)`, which is a run-time `error`
+call for `(Either e)`. Not good.
+
+**Good**: use `Either String` concretely
+
+```hs
+data Email = Email
+
+parseEmail :: Text -> Either String Email
+parseEmail = undefined
+
+instance FromJSON Email where
+  parseJSON = withText "Email" $ either fail pure . parseEmail
+```
+
+This is good because it's clear how failure is handled, it maintains the same
+`FromJSON` semantics, and it can easily recover the `MonadFail` use-cases:
+
+```hs
+hush . parseEmail :: (String -> Maybe Email)
+
+either throwString pure . parseEmail :: (String -> IO Email)
+```
+
 ### Learning resources
 
 * [What I Wish I Knew When Learning Haskell](http://dev.stephendiehl.com/hask/)

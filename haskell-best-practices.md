@@ -13,6 +13,54 @@
      x `divEx` d = x / d
  ```
 
+### Avoid `MonadFail`
+
+Don't write functions constrained by `MonadFail`.
+
+**Bad**:
+
+```hs
+data Email = Email
+
+parseEmail :: MonadFail m => Text -> m Email
+parseEmail txt
+  | isEmail txt = return $ Email txt
+  | otherwise = fail "that isn't an email!"
+
+instance FromJSON Email where
+  parseJSON = withText "Email" parseEmail
+```
+
+**Good**: use `Either String` concretely
+
+```hs
+data Email = Email
+
+parseEmail :: Text -> Either String Email
+parseEmail txt
+  | isEmail txt = Right $ Email txt
+  | otherwise = Left "that isn't an email!"
+
+instance FromJSON Email where
+  parseJSON = withText "Email" $ either fail pure . parseEmail
+```
+
+You can recover other side-effects easily:
+
+```hs
+hush . parseEmail :: Text -> Maybe Email
+
+either throwString pure . parseEmail :: Text -> IO Email
+```
+
+**Justification**:
+
+`MonadFail` over `Either` is a common foot-gun. We might expect `fail` to return
+`Either String a`, but instead it throws an error. There are many other
+surprising and problematic instances of `MonadFail` that make this abstraction
+dangerous. Writing functions that abstract over `MonadFail` opens us up to these
+surprising and hard to reason about errors.
+
 ### Learning resources
 
 * [What I Wish I Knew When Learning Haskell](http://dev.stephendiehl.com/hask/)

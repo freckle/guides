@@ -20,7 +20,7 @@ us in most cases.
 
 ## Comments
 
-Comments should follow [Haddock style](https://www.haskell.org/haddock/doc/html/markup.html).
+Comments should follow [Haddock style](https://github.com/frontrowed/guides/blob/master/haskell-style.md#haddocks).
 
 ## Monad sequences and Haskell arrows
 

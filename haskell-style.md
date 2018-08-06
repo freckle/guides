@@ -12,8 +12,15 @@ Something that is good in preferable in one place could be bad in another.
 
 # Haskell
 
-* Max 120 col line length
-* Comment following Haddock style
+## Line Length
+
+Aim for 80 columns max. Long identifiers can sometimes make this tricky, so
+this is not a hard-and-fast rule. `brittany` should handle this formatting for
+us in most cases.
+
+## Comments
+
+Comments should follow [Haddock style](https://github.com/frontrowed/guides/blob/master/haskell-style.md#haddocks).
 
 ## Monad sequences and Haskell arrows
 

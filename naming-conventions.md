@@ -229,8 +229,8 @@ This will produce the following JSON:
 ### Request/Response types
 
 For complicated `Handler` requests or responses, where we use a custom type
-instead of domain object, such types should be named `{Resource}{Method}` where
-`Resource` matches the route and `Method` is Sentence-case.
+instead of a domain object, such types should be named `{Resource}{Method}`
+where `Resource` matches the route and `Method` is Sentence-case.
 
 ```hs
 -- Good

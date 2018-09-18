@@ -226,6 +226,53 @@ This will produce the following JSON:
 }
 ```
 
+### Request/Response types
+
+For complicated `Handler` requests or responses, where we use a custom type
+instead of an `Entity` directly, such types should be named `{Resource}{Method}`
+where `Resource` matches the route and `Method` is Sentence-case.
+
+```hs
+-- Good
+data SchoolGet
+  -- ...
+
+instance ToJSON SchoolGet where
+  -- ...
+
+getSchoolR :: SchoolId -> Handler Value
+getSchoolR schoolId = do
+  school <- get404 schoolId
+  sendStatusJSON status200 SchoolGet {- ... -}
+
+data SchoolsPost
+  -- ...
+
+instance FromJSON SchoolsPost where
+  -- ...
+
+postSchoolsR :: Handler Value
+postSchoolsR = do
+  SchoolsPost {..} <- requireJsonBody
+  -- ...
+
+-- Bad
+data GetSchool
+  -- Out of order (though gramatically attractive)
+
+data SchoolGET
+  -- Wrong case
+
+data SchoolResponse
+  -- Missing Method, redundant suffix
+
+data GetSchools
+  -- Incorrect plurization
+
+data CreateSchoolPost
+  -- Duplicate verb, incorrect pluralization
+```
+
 ## JavaScript
 
 JavaScript uses `camelCase` for identifiers and `TitleCase` for classes and

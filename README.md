@@ -8,7 +8,7 @@ Why do we use terms like "Monoid" and what do they mean?
 
 ## [Naming Conventions](./naming-conventions.md)
 
-Contentions for naming database entities, JSON serializations, etc.
+Conventions for naming database entities, JSON serializations, etc.
 
 ## Haskell
 

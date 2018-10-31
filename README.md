@@ -12,7 +12,7 @@ Conventions for naming database entities, JSON serializations, etc.
 
 ## Haskell
 
-### [Best Practice](./haskell-best-practices.md)
+### [Best Practices](./haskell-best-practices.md)
 
 Best practices in a Haskell code base.
 

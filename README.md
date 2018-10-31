@@ -24,6 +24,10 @@ Haskell style. **TL;DR**: use Brittany.
 
 Haskell testing practices, *work in progress*.
 
+### [Open Source](./haskell-open-source.md)
+
+Processes and practices for our open source libraries.
+
 ## Shell
 
 ### [Style](./shell-style.md)

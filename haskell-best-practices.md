@@ -400,18 +400,22 @@ f (ThingB b) = if b then 1 else 2
 
 `OverloadedLists` work from a typelcass `IsList`:
 
-```class IsList l where
-  type Item l
-  fromList  :: [Item l] -> l
-  toList    :: l -> [Item l]```
+```
+class IsList l where
+type Item l
+fromList  :: [Item l] -> l
+toList    :: l -> [Item l]
+```
   
 The `mono-traversable` package defines a series typeclasses:
 
-```type family Element mono
+```
+type family Element mono
 
 class MonoFoldable mono where
-  ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
-  ...```
+ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
+...
+```
   
 You can see that both of these typeclasses utilize type families. `IsList` has an associated type `Item` and `MonoFoldable` uses an open type family `Element`. They are nearly identical in their utilization of these techniques. I'll focus mainly on `mono-traversable`, but arguments against it are very transferable to `OverloadedLists`.
 

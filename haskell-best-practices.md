@@ -398,34 +398,47 @@ f (ThingB b) = if b then 1 else 2
 
 ## Avoid `OverloadedLists` and `MonoTraversable`
 
-`OverloadedLists` work from a typelcass `IsList`:
+`OverloadedLists` depend on a typeclass `IsList`:
 
-```
+```haskell
 class IsList l where
-type Item l
-fromList  :: [Item l] -> l
-toList    :: l -> [Item l]
+  type Item l
+  fromList  :: [Item l] -> l
+  toList    :: l -> [Item l]
 ```
-  
-The `mono-traversable` package defines a series typeclasses:
 
-```
+The `mono-traversable` package defines a series of typeclasses:
+
+```haskell
 type family Element mono
 
 class MonoFoldable mono where
-ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
+  ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
 ...
 ```
-  
-You can see that both of these typeclasses utilize type families. `IsList` has an associated type `Item` and `MonoFoldable` uses an open type family `Element`. They are nearly identical in their utilization of these techniques. I'll focus mainly on `mono-traversable`, but arguments against it are very transferable to `OverloadedLists`.
 
-The problem is that type families do not have great type inference. The problem is compounded by the fact that `mono-traversable` supplants a large part of the prelude with functions that have bad type inference. We end up getting tons of cryptic type errors in places where we'd expect type inference to take hold. That leads to confusion and littering type annotations around the codebase. So we don't like them.
+Each of these typeclasses rely on type families:
 
-The problem gets deeper when we realize that `mono-traversable` is a nearly useless abstraction for our use-case. There are exactly *ZERO* uses of `omap` in our codebase. We love `map`, `foldMap`, `traverse`, `for`, etc. These are infinitely useful, but we are never for example traversing over the characters of a `Text` type, which is `mono-traversable`'s primary inspiration. If our use case demanded a lot of string munging, then maybe it would be useful. That just isn't the case.
+* `IsList` has an associated type `Item` for representing the element of the
+list
+* `MonoFoldable` uses an open type family `Elem` for representing the element of
+`mono`
 
-The fact is that `mono-traversable` is not an abstraction that targets our use-case, it decreases type inference, increases cryptic type errors, and increases boilerplate.
+Unfortunately, type families do not have great type inference. Furthermore,
+`mono-traversable` exports a number of replacements for common `Prelude`
+functions which rely on these type families.
 
-After all that you might say, but `FrontRow.Model.Assignment` uses type families and associated types. And you'd be right. That use of type families and associated types was very purposefully designed to abstract over a common use case. It has known issues of type inference and hairy type errors, but it is a matter of ROI. `FrontRow.Model.Assignment` returns on its complexity investment, `mono-traversable` does not.
+The problem gets deeper when we realize that `mono-traversable` is a nearly
+useless abstraction for our use-case. There are exactly *ZERO* uses of `omap` in
+our codebase. We love `map`, `foldMap`, `traverse`, `for`, etc. These are
+infinitely useful, but we are never for example traversing over the characters
+of a `Text` type, which is `mono-traversable`'s primary inspiration. If our use
+case demanded a lot of string munging, then maybe it would be useful. That just
+isn't the case.
+
+The fact is that `mono-traversable` is not an abstraction that targets our
+use-case, it decreases type inference, increases cryptic type errors, and
+increases boilerplate.
 
 ## Appendix
 

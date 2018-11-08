@@ -396,6 +396,50 @@ f (ThingA a) = a == 0
 f (ThingB b) = if b then 1 else 2
 ```
 
+## Avoid `OverloadedLists` and `MonoTraversable`
+
+`OverloadedLists` depend on a typeclass `IsList`:
+
+```haskell
+class IsList l where
+  type Item l
+  fromList  :: [Item l] -> l
+  toList    :: l -> [Item l]
+```
+
+The `mono-traversable` package defines a series of typeclasses:
+
+```haskell
+type family Element mono
+
+class MonoFoldable mono where
+  ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
+...
+```
+
+Each of these typeclasses rely on type families:
+
+* `IsList` has an associated type `Item` for representing the element of the
+list
+* `MonoFoldable` uses an open type family `Elem` for representing the element of
+`mono`
+
+Unfortunately, type families do not have great type inference. Furthermore,
+`mono-traversable` exports a number of replacements for common `Prelude`
+functions which rely on these type families.
+
+The problem gets deeper when we realize that `mono-traversable` is a nearly
+useless abstraction for our use-case. There are exactly *ZERO* uses of `omap` in
+our codebase. We love `map`, `foldMap`, `traverse`, `for`, etc. These are
+infinitely useful, but we are never for example traversing over the characters
+of a `Text` type, which is `mono-traversable`'s primary inspiration. If our use
+case demanded a lot of string munging, then maybe it would be useful. That just
+isn't the case.
+
+The fact is that `mono-traversable` is not an abstraction that targets our
+use-case, it decreases type inference, increases cryptic type errors, and
+increases boilerplate.
+
 ## Appendix
 
 #### resources

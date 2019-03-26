@@ -437,6 +437,7 @@ Good style prefers:
 * Qualified imports for major name clashes
   * `containers`
   * `unordered-containers`
+* Qualified imports for "ad-hoc module schema" (see example)
 * Aliased imports for packaging and exporting many modules in a single module.
   * creating a custom prelude
 
@@ -489,6 +490,30 @@ import System.IO
   , stdout
   , withFile
   )
+```
+
+While we don't prefer writing all modules to assume they'll be qualified, there
+are cases where we implement related modules to share an interface of functions.
+In such cases, we would use un-qualified naming and expect `qualified` imports:
+
+```hs
+-- Bad
+import FrontRow.Jobs.SyncTeacher (enqueueSyncTeacher)
+import FrontRow.Jobs.DeleteTeacher (enqueueDeleteTeacher)
+
+main = do
+  if shouldDeleteTeacher teacher
+    then enqueueDeleteTeacher teacher
+    then enqueueSyncTeacher teacher
+
+-- Good
+import qualified FrontRow.Jobs.SyncTeacher as SyncTeacher
+import qualified FrontRow.Jobs.DeleteTeacher as DeleteTeacher
+
+main = do
+  if shouldDeleteTeacher teacher
+    then DeleteTeacher.enqueue teacher
+    then SyncTeacher.enqueue teacher
 ```
 
 ### Importing types and qualifying

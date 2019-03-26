@@ -1,4 +1,4 @@
-## Best Practices
+# Best Practices
 
 1. If authoring a distinct package of reasonable size and generic utility,
    prefer starting a separate, public repository utilized as a Git dependency

@@ -1,22 +1,25 @@
-# FrontRow Style Guide
+# Haskell Style
 
 Principles:
 
 * **Maximize readability**
-  * Code should be immediately readable by someone not familiar with that area. If you have to continuously refer to documentation, comments or dig into implementation to understand what's happening, the code isn't sufficiently self-descriptive and needs to be improved. When not possible, you must comment. Coding is a team sport, _always write with other developers in mind_
+  * Code should be immediately readable by someone not familiar with that area.
+    If you have to continuously refer to documentation, comments or dig into
+    implementation to understand what's happening, the code isn't sufficiently
+    self-descriptive and needs to be improved. When not possible, you must
+    comment. Coding is a team sport, _always write with other developers in
+    mind_
 * **Be aware of the context**
 * **Use your judgement**
 
-There are some hard rules, but good style is context-sensitive.
-Something that is good in preferable in one place could be bad in another.
-
-# Haskell
+There are some hard rules, but good style is context-sensitive. Something that
+is good in preferable in one place could be bad in another.
 
 ## Line Length
 
-Aim for 80 columns max. Long identifiers can sometimes make this tricky, so
-this is not a hard-and-fast rule. `brittany` should handle this formatting for
-us in most cases.
+Aim for 80 columns max. Long identifiers can sometimes make this tricky, so this
+is not a hard-and-fast rule. `brittany` should handle this formatting for us in
+most cases.
 
 ## Comments
 
@@ -24,62 +27,71 @@ Comments should follow [Haddock style](https://github.com/frontrowed/guides/blob
 
 ## Monad sequences and Haskell arrows
 
-Monadic sequences should normally go in one direction, including `<-` from do notation
+Monadic sequences should normally go in one direction, including `<-` from do
+notation
 
-bad
+```haskell
+-- Bad
+result <- m >>= return
 
-    result <- m >>= return
+-- Good
+result <- return =<< m
+```
 
-good
+That isn't to say we prefer `=<<` over `>>=`
 
-    result <- return =<< m
+```haskell
+-- Good
+result <-
+      action4
+  =<< action3
+  =<< action2
+  =<< action1
 
-That isn't to say we prever `=<<` over `>>=`
+-- Better
+result <-
+      action1
+  >>= action2
+  >>= action3
+  >>= action4
 
-good
+-- Good: this is easy to read left-to-right and scales as the lambda grows
 
-    result <-
-          action4
-      =<< action3
-      =<< action2
-      =<< action1
-
-better
-
-    result <-
-          action1
-      >>= action2
-      >>= action3
-      >>= action4
-
-good. This is easy to read left-to-right and scales as the lambda grows
-
-    m >>= (\x -> )
+m >>= (\x -> )
+```
 
 In general left bind does not scale well for inline code.
 This is ok.
 
-    (\x -> f x) =<< m
+```hs
+(\x -> f x) =<< m
+```
 
 This is bad.
 
-    (\x -> do f x
-              g x
-    ) =<< m
+```hs
+(\x -> do f x
+          g x
+) =<< m
+```
 
 The lambda should be turned into a bound function.
-
 
 ## Distinguishing function arguments
 
 Be careful of creating functions that have the same input type
 
-    f :: Int -> Int -> Int -> Int
+```hs
+f :: Int -> Int -> Int -> Int
+```
 
-This is a good time to look at using a record to name the arguments or to use newtypes around the `Int`s. Note that the fact that the output is the same type as the input is not a concern: the below is fine
+This is a good time to look at using a record to name the arguments or to use
+newtypes around the `Int`s. Note that the fact that the output is the same type
+as the input is not a concern: the below is fine
 
-    f :: Int -> Int
-
+```hs
+f :: Int -> Int
+```
 
 ## Data type declarations
 
@@ -95,18 +107,16 @@ data Student
   }
 ```
 
-
-
 ### Sum Types
 
-Something small can go on one line. The scalable way of declaring things that maintains vertical alignment properties is
+Something small can go on one line. The scalable way of declaring things that
+maintains vertical alignment properties is
 
 ``` haskell
 data TransferTo
   = TransferToTeacher (Entity Teacher)
   | TransferToEmail   Email
 ```
-
 
 ## Function Type Signatures
 
@@ -143,7 +153,6 @@ which will cause a noisy diff if we rename `GameSession` (each following line
 also needs to be indented):
 
 ```diff
-
  instance FromJSON (GameSession Never MathStandardAssignmentId) where
    parseJSON = withObject "cannot parse GameSession" $ \o ->
 -   GameSession <$> o .: "answers"
@@ -160,7 +169,6 @@ also needs to be indented):
 +                <*> o .: "sub-sub-standard-perc"
 +                <*> o .: "coins-gained"
 +                <*> pure Never
-
 ```
 
 Instead, do
@@ -250,6 +258,7 @@ generally easier to read in long functional expressions.
 ### More examples
 
 #### Data declarations
+
 ```haskell
 --- Bad
 data SomeRecord = SomeRecord { someField :: Int
@@ -278,8 +287,10 @@ data SomeSum'
 ```
 
 #### Do statements
+
 ```haskell
--- Bad - do is indented 2 spaces, so the expressions following it have to be indented 5 spaces
+-- Bad - do is indented 2 spaces, so the expressions following it have to be
+-- indented 5 spaces
 someBinding =
   do x <- getLine
      y <- getLine
@@ -293,8 +304,10 @@ someBinding' = do
 ```
 
 #### Case expressions
+
 ```haskell
--- Bad - aligning to case pushes expressions way to the left, and aligning arrows is fiddly
+-- Bad - aligning to case pushes expressions way to the left, and aligning
+-- arrows is fiddly
 someBinding mx = case mx of
                    Nothing -> 0
                    Just x  -> x
@@ -315,6 +328,7 @@ someBinding'' mx =
 ```
 
 #### Let expressions
+
 ```haskell
 -- Bad - aligning multiple let bindings like this is fiddly
 someBinding mx =
@@ -372,6 +386,7 @@ someBinding mx = f <$> mx <*> mx
 ```
 
 #### Lists and Tuples
+
 ```haskell
 -- Short lists and tuples can be placed on one line
 names = ["Joe", "Bob", "Sam"]
@@ -403,6 +418,7 @@ teacher =
 ## Imports
 
 Haskell's modules expose some variety in import style:
+
 * Open imports
 * Explicit imports
 * Exclusionary imports
@@ -410,18 +426,19 @@ Haskell's modules expose some variety in import style:
 * Aliased imports
 
 Good style prefers:
+
 * Open imports for common libraries
-  - `base`
-  - `mtl`
-  - custom preludes
+  * `base`
+  * `mtl`
+  * custom preludes
 * Explicit imports for bringing lesser known functions in to scope
 * Exclusionary imports for avoiding minor name clashes
-  - `lens`
+  * `lens`
 * Qualified imports for major name clashes
-  - `containers`
-  - `unordered-containers`
+  * `containers`
+  * `unordered-containers`
 * Aliased imports for packaging and exporting many modules in a single module.
-  - creating a custom prelude
+  * creating a custom prelude
 
 ```haskell
 -- Good
@@ -434,7 +451,8 @@ import qualified Data.Map as Map
 import qualified Data.Text as Text
 
 -- Bad
--- Overly open imports lead to increased ambiguity forcing common functions to be qualified.
+-- Overly open imports lead to increased ambiguity forcing common functions to
+-- be qualified.
 import Control.Lens
 import Control.Monad.Logger
 import Control.Monad.Trans.Reader
@@ -474,14 +492,20 @@ import System.IO
 ```
 
 ### Importing types and qualifying
-It is also common to explicitly import types from a module and also import it qualified.
+
+It is also common to explicitly import types from a module and also import it
+qualified.
+
 ```
 import Data.Map (Map)
 import qualified Data.Map as Map
 ```
 
 ### Abbreviating qualifications
-There are a number of common abbreviations that are used in the community to qualify imports.
+
+There are a number of common abbreviations that are used in the community to
+qualify imports.
+
 ```haskell
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -595,7 +619,7 @@ module Driver
 
 ## Declaring Extensions
 
-- All Haskell packages MUST use the following `default-extensions`:
+* All Haskell packages MUST use the following `default-extensions`:
 
   ```yaml
   default-extensions:
@@ -631,7 +655,7 @@ module Driver
   extensions MUST be defined via LANGUAGE pragmas in the modules where they're
   needed.
 
-- Place extensions on their own line, and sort them
+* Place extensions on their own line, and sort them
 
   ```haskell
   -- Bad
@@ -644,7 +668,7 @@ module Driver
   {-# LANGUAGE RecordWildCards #-}
   ```
 
-- Leave a blank line after the extensions list
+* Leave a blank line after the extensions list
 
   ```haskell
   {-# LANGAUGE OverloadedStrings #-}
@@ -675,8 +699,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
 ### General guides
 
-- Use proper Haddock [markup][]
-- Link all identifiers, anywhere they appear
+* Use proper Haddock [markup][]
+* Link all identifiers, anywhere they appear
 
   Bad
 
@@ -697,7 +721,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   --
   ```
 
-- Use leading documentation (`-- |`) for top-level definitions and trailing
+* Use leading documentation (`-- |`) for top-level definitions and trailing
   documentation (`-- ^`) for record attributes and function arguments
 
   Bad
@@ -826,8 +850,8 @@ Good
 
 Bodies are optional but encouraged. When present, the following applies:
 
-- Wrap non-literal content at 80 columns (not our usual 120)
-- Surround block elements by a line of whitespace
+* Wrap non-literal content at 80 columns (not our usual 120)
+* Surround block elements by a line of whitespace
 
   Bad
 
@@ -882,7 +906,7 @@ Bodies are optional but encouraged. When present, the following applies:
   theFunction
   ```
 
-- Lists receive a hanging indent
+* Lists receive a hanging indent
 
   Bad
 
@@ -918,7 +942,7 @@ Bodies are optional but encouraged. When present, the following applies:
 
 ### Module organization
 
-- Organize your exports by logical groups or [progressive
+* Organize your exports by logical groups or [progressive
   disclosure][progressive_disclosure] and use section headings
 
   Bad
@@ -949,7 +973,7 @@ Bodies are optional but encouraged. When present, the following applies:
     )
   ```
 
-- Consider adding section documentation
+* Consider adding section documentation
 
   **NOTE**: Summary/Body rules apply!
 
@@ -974,7 +998,7 @@ Bodies are optional but encouraged. When present, the following applies:
     )
   ```
 
-- If you want to separate the definitions *in* the module, use [named
+* If you want to separate the definitions *in* the module, use [named
   chunks][chunks].
 
   ```hs

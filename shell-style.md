@@ -73,7 +73,7 @@ if you use `[[` because you want regex or glob matching in one place, don't use
    rm -rf "$dirr/bar" # typo made this rm -rf /bar
    ```
 
-2. Avoid `set -x`
+1. Avoid `set -x`
 
    This option outputs every statement before it's executed. Only use this if
    your script has no function definitions, control flow structures, or
@@ -343,5 +343,5 @@ Some alternatives:
 
 ## Additional References
 
-- http://mywiki.wooledge.org/BashFAQ
-- https://robots.thoughtbot.com/the-unix-shells-humble-if
+- [BashFAQ](http://mywiki.wooledge.org/BashFAQ)
+- [The Unix Shell's Humble If](https://robots.thoughtbot.com/the-unix-shells-humble-if)

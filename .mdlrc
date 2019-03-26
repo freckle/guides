@@ -1,0 +1,4 @@
+# vim: ft=ruby
+
+# Disable "Trailing punctuation in header" rule
+rules "~MD026"

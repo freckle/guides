@@ -18,13 +18,15 @@ Don't do this:
 ```sql
 CREATE TABLE ela_adaptive_skill_practice_paragraphs (
   id integer PRIMARY KEY NOT NULL,
-  ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+  ela_adaptive_skill_practice_content_id uuid
+    REFERENCES ela_adaptive_skill_practice_content NOT NULL,
   type text NOT NULL,
   content text NOT NULL,
   caption text,
   position integer NOT NULL,
   UNIQUE (ela_adaptive_skill_practice_content_id, position),
-  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position
+    CHECK (position >= 0)
 );
 ```
 
@@ -33,14 +35,16 @@ Do this:
 ```diff
 CREATE TABLE ela_adaptive_skill_practice_paragraphs (
   id integer PRIMARY KEY NOT NULL,
-- ela_adaptive_skill_practice_content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
+- ela_adaptive_skill_practice_content_id uuid
+-   REFERENCES ela_adaptive_skill_practice_content NOT NULL,
 + content_id uuid REFERENCES ela_adaptive_skill_practice_content NOT NULL,
   type text NOT NULL,
   content text NOT NULL,
   caption text,
   position integer NOT NULL,
   UNIQUE (ela_adaptive_skill_practice_content_id, position),
-  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position CHECK (position >= 0)
+  CONSTRAINT valid_ela_adaptive_skill_practice_paragraph_position
+    CHECK (position >= 0)
 );
 ```
 

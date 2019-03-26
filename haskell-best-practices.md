@@ -2,16 +2,18 @@
 
 ## Error throwing / exceptions
 
- * Try very hard to avoid partial functions
- * If you know a function is safe, but somehow weren't able to "prove" it to GHC, use your error string to state why you think the error is impossible. e.g.
- 
- ```haskell
- halfOfEvens :: Rational -> [Rational] -> [Rational]
- halfOfEvens n = map (\d -> n `divEx` d) . filter (/= 0)
-   where
-     x `divEx` 0 = error "This should be impossible: We already filtered the list to remove zeroes"
-     x `divEx` d = x / d
- ```
+* Try very hard to avoid partial functions
+* If you know a function is safe, but somehow weren't able to "prove" it to GHC,
+  use your error string to state why you think the error is impossible. e.g.
+
+  ```haskell
+  halfOfEvens :: Rational -> [Rational] -> [Rational]
+  halfOfEvens n = map (\d -> n `divEx` d) . filter (/= 0)
+    where
+      x `divEx` 0 = error
+        "This should be impossible: We already filtered the list to remove zeroes"
+      x `divEx` d = x / d
+  ```
 
 ### Avoid `MonadFail`
 
@@ -71,12 +73,25 @@ surprising and hard to reason about errors.
 Why / when you want to use them:
 
 * you have multiple types which satisfy some interface (type class)
+
 AND
-* you want to be able to add types to the interface without changing some supertype (i.e. 'open' rather than 'closed')
+
+* you want to be able to add types to the interface without changing some
+  supertype (i.e. 'open' rather than 'closed')
+
 AND
-* you want to delay the choice of which function from the interface to apply to the data (e.g. rather than using existentials for an interface with a single function, just apply that function, https://lukepalmer.wordpress.com/2010/01/24/haskell-antipattern-existential-typeclass/)
+
+* you want to delay the choice of which function from the interface to apply to
+  the data (e.g. rather than using existentials for an interface with a single
+  function, just apply that function, see
+  [haskell-antipattern-existential-typeclass][])
+
+  [haskell-antipattern-existential-typeclass]: https://lukepalmer.wordpress.com/2010/01/24/haskell-antipattern-existential-typeclass/
+
 AND
-* you want to work with multiple types adhering to this interface without regard for their original type
+
+* you want to work with multiple types adhering to this interface without regard
+  for their original type
 
 Bad example:
 
@@ -104,21 +119,22 @@ showPrevs = map (show . pred)
 
 ## Lens
 
-Lens is a very convenient way to read and update deeply nested structures. Works nicely both against raw JSON text and against Value types.
+Lens is a very convenient way to read and update deeply nested structures. Works
+nicely both against raw JSON text and against Value types.
 
-* https://github.com/ekmett/lens
-
+* [Lens](https://github.com/ekmett/lens)
 * Aeson lens:
-  * https://hackage.haskell.org/package/lens-aeson-1.0.0.3/docs/Data-Aeson-Lens.html
-  * http://dev.stephendiehl.com/hask/#lens-aeson
+  * [Haddocks](https://hackage.haskell.org/package/lens-aeson-1.0.0.3/docs/Data-Aeson-Lens.html)
+  * [Blog post](http://dev.stephendiehl.com/hask/#lens-aeson)
 
 ## Script Haskell
 
-https://github.com/commercialhaskell/stack/wiki/Script-interpreter
+[Stack Script Interpreter](https://github.com/commercialhaskell/stack/wiki/Script-interpreter)
 
 ## Data declaration with type family
 
-Sometimes you have two types which are very similar, both in their representations and in how they're used. For example,
+Sometimes you have two types which are very similar, both in their
+representations and in how they're used. For example,
 
 ```haskell
 data Foo
@@ -127,7 +143,7 @@ data Foo
   , b :: Int
   , c :: Int
   }
-  
+
  data Bar
    = Bar
    { a :: Int
@@ -137,7 +153,8 @@ data Foo
    }
 ```
 
-It would be a pain to duplicate functions which operate on these types. A first attempt to avoid that might be:
+It would be a pain to duplicate functions which operate on these types. A first
+attempt to avoid that might be:
 
 ```haskell
 data FooBar
@@ -164,15 +181,16 @@ data FooBar f
    , c :: Int
    , d :: f Int
    }
-   
+
  type Foo = FooBar Never
  type Bar = FooBar Always
 ```
 
-This lets us share the commonalities and still differentiate in a safe way. But it's a little annoying that `Foo`'s `d` is wrapped in an `Identity` constructor at the value level. We can fix this final infelicity with type families:
+This lets us share the commonalities and still differentiate in a safe way. But
+it's a little annoying that `Foo`'s `d` is wrapped in an `Identity` constructor
+at the value level. We can fix this final infelicity with type families:
 
 ```haskell
-
 data FooBarType = Foo | Bar
 
 type family OnlyIfBar (x :: FooBarType) (a :: *) :: * where
@@ -187,15 +205,19 @@ data FooBar (x :: FooBarType)
    , d :: OnlyIfBar x Int
    }
 ```
-With this approach `d :: FooBar Foo -> ()` (total absence of `d` would be the best option, but without extensible records, `()` is the best we can do) and `d :: FooBar Bar -> Int`.
+
+With this approach `d :: FooBar Foo -> ()` (total absence of `d` would be the
+best option, but without extensible records, `()` is the best we can do) and `d
+:: FooBar Bar -> Int`.
 
 ## `newtype`s
 
 Newtypes in Haskell are used for 3 primary purposes:
- 1. To document a type's meaning
- 2. To refine the type (i.e. limit it's inhabitants)
- 3. To define new/different instances
- 
+
+1. To document a type's meaning
+1. To refine the type (i.e. limit it's inhabitants)
+1. To define new/different instances
+
 At FR, we seldom do 1. Instead we prefer to use `Tagged` and `TypeLits`:
 
 ```haskell
@@ -203,7 +225,7 @@ sf :: Tagged "City" String
 sf = "San Francisco"
 ```
 
-instead of 
+instead of
 
 ```haskell
 newtype City = City { unCity :: String }
@@ -212,6 +234,7 @@ sf = City "San Francisco"
 ```
 
 2 looks like:
+
 ```haskell
 module Natural (Natural(), mkNatural) where
 
@@ -221,6 +244,7 @@ mkNatural n = if n >= 0 then Just (Natural n) else Nothing
 ```
 
 3 looks like:
+
 ```haskell
 newtype Add = Add { unAdd :: Int }
 instance Monoid Add where
@@ -234,17 +258,31 @@ instance Monoid Mult where
 
 ## Phantom types
 
-The `Tagged` example above makes use of a phantom type variable. The definition of `Tagged` is:
+The `Tagged` example above makes use of a phantom type variable. The definition
+of `Tagged` is:
+
 ```haskell
 newtype Tagged t a = Tagged { untag :: a }
 ```
 
-Note how the type variable `t` does not appear on the right-hand-side of the equals-sign. It's only used to add type-level information to a type - it's never used at the value level. We call this kind of type variable a phantom type variable, or occasionally, just a phantom type.
+Note how the type variable `t` does not appear on the right-hand-side of the
+equals-sign. It's only used to add type-level information to a type - it's never
+used at the value level. We call this kind of type variable a phantom type
+variable, or occasionally, just a phantom type.
 
-A more useful example is hashing passwords. We might want to represent passwords as either raw text or hashed text and have operations that only work on one kind:
+A more useful example is hashing passwords. We might want to represent passwords
+as either raw text or hashed text and have operations that only work on one
+kind:
 
 ```haskell
-module Password (Password, PasswordState, rawPassword, hashPassword, comparePassword) where
+module Password
+  ( Password
+  , PasswordState
+  , rawPassword
+  , hashPassword
+  , comparePassword
+  )
+where
 
 data PasswordState = Raw | Hashed
 
@@ -264,11 +302,19 @@ comparePassword :: Password 'Raw -> Password 'Hashed -> Bool
 comparePassword (Password r) (Password h) = secureHash r == h
 ```
 
-We're using a promoted datatype (`PasswordState`) to encode whether a `Password` is plaintext or hashed. Note that we do not expose the constructor for `Password`, and instead expose a smart constructor `rawPassword` and a hashing function `hashPassword`. If we expose the constructor, a malicious (or forgetful) user could construct a value of `Password 'Hashed` that contains a plaintext password.
+We're using a promoted datatype (`PasswordState`) to encode whether a `Password`
+is plaintext or hashed. Note that we do not expose the constructor for
+`Password`, and instead expose a smart constructor `rawPassword` and a hashing
+function `hashPassword`. If we expose the constructor, a malicious (or
+forgetful) user could construct a value of `Password 'Hashed` that contains a
+plaintext password.
 
 ## GADTs
 
-Closely related to phantom types are Generalized Algebraic Data Types or GADTs. Suppose we had the following representation of a small programming language with integers, bools, addition, and conditions:
+Closely related to phantom types are Generalized Algebraic Data Types or GADTs.
+Suppose we had the following representation of a small programming language with
+integers, bools, addition, and conditions:
+
 ```haskell
 data Expr
   | I Int
@@ -279,7 +325,10 @@ data Expr
     deriving (Eq, Show)
 ```
 
-We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's nothing preventing us from constructing values like `Add (I 1) (B True)`. Furthermore, we can only detect this kind of problem at runtime. Writing an evaluation function for this data type is frustrating:
+We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's
+nothing preventing us from constructing values like `Add (I 1) (B True)`.
+Furthermore, we can only detect this kind of problem at runtime. Writing an
+evaluation function for this data type is frustrating:
 
 ```haskell
 data Value
@@ -304,9 +353,13 @@ eval (Cond c t f) = do
     else eval f
 ```
 
-We're relying on the `Monad` instance for `Maybe` to call `fail` on pattern match failures when we pass something like `Add (I 1) (B True)` at runtime. We also have to make an extra datatype to represent values.
+We're relying on the `Monad` instance for `Maybe` to call `fail` on pattern
+match failures when we pass something like `Add (I 1) (B True)` at runtime. We
+also have to make an extra datatype to represent values.
 
-You can try to do something smarter with phantom types, existential quantification, and smart constructors:
+You can try to do something smarter with phantom types, existential
+quantification, and smart constructors:
+
 ```haskell
 data Expr a
   = I Int
@@ -341,6 +394,7 @@ eval (Cond c t f)
 ```
 
 Unfortunately this doesn't compile. You'll get errors like:
+
 ```plaintext
 Couldn't match expected type ‘a’ with actual type ‘Bool’
   ‘a’ is a rigid type variable bound by
@@ -350,9 +404,13 @@ In the expression: b
 In an equation for ‘eval’: eval (B b) = b
 ```
 
-Everything up to the `eval` function works, but then we don't have any evidence when matching `B b` that `Expr a` should be `Expr Bool`. We're not carrying that information around! 
+Everything up to the `eval` function works, but then we don't have any evidence
+when matching `B b` that `Expr a` should be `Expr Bool`. We're not carrying that
+information around!
 
-This is what GADTs are for - they let you carry around extra type evidence in your constructors:
+This is what GADTs are for - they let you carry around extra type evidence in
+your constructors:
+
 ```haskell
 data Expr a where
   I :: Int -> Expr Int
@@ -374,7 +432,10 @@ eval (Cond c t f)
   | otherwise = eval f
 ```
 
-When we pattern match on `B` here, we gain access to evidence that `Expr a` is `Expr Bool`, and so on for the other constructors. Furthermore, GHC won't even let us construct a value like `Add (I 1) (B True)`:
+When we pattern match on `B` here, we gain access to evidence that `Expr a` is
+`Expr Bool`, and so on for the other constructors. Furthermore, GHC won't even
+let us construct a value like `Add (I 1) (B True)`:
+
 ```haskell
 Couldn't match type ‘Bool’ with ‘Int’
  Expected type: Expr Int
@@ -383,17 +444,21 @@ In the second argument of ‘Add’, namely ‘(B True)’
 In the expression: Add (I 1) (B True)
 ```
 
-If you're curious how this works, you can dump the Core (`-ddump-simpl`, see Appendix) to see that each constructor is literally carrying around an extra parameter as evidence that allows GHC to insert safe type casts from `a` to `Int` or `Bool` (or whatever) inside a pattern match.
+If you're curious how this works, you can dump the Core (`-ddump-simpl`, see
+Appendix) to see that each constructor is literally carrying around an extra
+parameter as evidence that allows GHC to insert safe type casts from `a` to
+`Int` or `Bool` (or whatever) inside a pattern match.
 
-Note that the constructor's argument type doesn't have to match the type argument of the data type (see `LessThan` and `Cond` above). The following is perfectly legal (though of dubious utility):
+Note that the constructor's argument type doesn't have to match the type
+argument of the data type (see `LessThan` and `Cond` above). The following is
+perfectly legal (though of dubious utility): ```haskell data Thing a where
+ThingA :: Int -> Thing Bool ThingB :: Bool -> Thing Int
+
 ```haskell
-data Thing a where
-  ThingA :: Int -> Thing Bool
-  ThingB :: Bool -> Thing Int
-
 f :: Thing a -> a
 f (ThingA a) = a == 0
 f (ThingB b) = if b then 1 else 2
+
 ```
 
 ## Avoid `OverloadedLists` and `MonoTraversable`
@@ -413,16 +478,16 @@ The `mono-traversable` package defines a series of typeclasses:
 type family Element mono
 
 class MonoFoldable mono where
-  ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m 
+  ofoldMap :: Monoid m => (Element mono -> m) -> mono -> m
 ...
 ```
 
 Each of these typeclasses rely on type families:
 
 * `IsList` has an associated type `Item` for representing the element of the
-list
+  list
 * `MonoFoldable` uses an open type family `Elem` for representing the element of
-`mono`
+  `mono`
 
 Unfortunately, type families do not have great type inference. Furthermore,
 `mono-traversable` exports a number of replacements for common `Prelude`
@@ -442,8 +507,8 @@ increases boilerplate.
 
 ## Appendix
 
-#### resources
+### resources
 
-* http://nikita-volkov.github.io/profiling-cabal-projects/
+* [profiling-cabal-projects](http://nikita-volkov.github.io/profiling-cabal-projects/)
 * [Don Stewart on Core](http://stackoverflow.com/a/6121495)
 * [Simon Peyton Jones on Core](https://youtu.be/uR_VzYxvbxg)

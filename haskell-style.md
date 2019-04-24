@@ -270,8 +270,7 @@ data SomeRecord'
   = SomeRecord'
   { someField :: Int
   , someOtherField :: Double
-  }
-  deriving (Eq, Show)
+  } deriving (Eq, Show)
 
 -- Bad
 data SomeSum = FirstConstructor

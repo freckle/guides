@@ -872,6 +872,25 @@ Good
 -- | Returns the head of a non-empty list, or raises an exception
 ```
 
+When a Body is _not_ present (see below), no newline is required between a Summary and its associated top-level definition:
+
+Bad
+
+```hs
+-- | The worse of the @'Thing'@ twins
+-- 
+badThing :: Thing
+badThing = Thing 1
+```
+
+Good
+
+```hs
+-- | The better of the @'Thing'@ twins
+goodThing :: Thing
+goodThing = Thing 2
+```
+
 ### Body
 
 Bodies are optional but encouraged. When present, the following applies:

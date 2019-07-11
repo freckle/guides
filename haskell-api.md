@@ -9,8 +9,8 @@ choose what data to return.
   - `/3/students?schools.id=x,y,z`
   - `ApiClient.fetch("/3/students", { "schools.id": me.schoolIds })`
 - Bad:
-  - `/3/school-admins/me/schools`
-  - `ApiClient.fetch("/3/school-admins/me/schools")`
+  - `/3/school-admins/me/students`
+  - `ApiClient.fetch("/3/school-admins/me/students")`
 
 ## Parameters
 

@@ -193,6 +193,15 @@ makes sense.
 body <- getJsonBody
 body `shouldBe` [object ["id" .= teacherId]]
 
+-- Doesn't fail on unrelated attribute changes
+body <- getJsonBody @Value
+body
+  ^.. _Array
+  . traverse
+  . key "id"
+  . _JSON
+  `shouldMatchList` [teacherId]
+
 -- Bad
 body <- getJsonBody
 body `shouldBe` [TeacherGet teacherId]

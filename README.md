@@ -16,6 +16,10 @@ Conventions for naming database entities, JSON serializations, etc.
 
 Best practices in a Haskell code base.
 
+### [API](./haskell-api.md)
+
+Best practices in our Haskell API specifically.
+
 ### [Style](./haskell-style.md)
 
 Haskell style. **TL;DR**: use Brittany.

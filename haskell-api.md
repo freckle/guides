@@ -159,7 +159,12 @@ Example:
   getTeachersR :: Handler [TeacherGet]
   getTeachersR = undefined
 
+  data TeacherPost
   data TeacherPostBody
+
+  postTeacherR :: Handler TeacherPost
+  postTeacherR = do
+    body <- requireJsonBody @TeacherPostBody
 
   -- Bad
   data Teachers
@@ -168,6 +173,10 @@ Example:
   getTeachersR = undefined
 
   data PostTeacher
+
+  postTeacherR :: Handler (Entity Teacher)
+  postTeacherR = do
+    body <- requireJsonBody @PostTeacher
   ```
 
 - Prefer in-module data-access functions, until they require sharing

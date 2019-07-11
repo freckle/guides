@@ -95,7 +95,7 @@ than our multi-id path-pieces of today.
 - Include related resources in abbreviated form, Frontend almost always wants
   names:
   - `students: [{id:, firstName:, lastName:}]`
-  - `school: [{id:, name:}]`
+  - `school: {id:, name:}`
 
 ## Status Codes
 
@@ -120,16 +120,17 @@ than our multi-id path-pieces of today.
   - There's no need to `V3`-prefix everything
   - Things can "start over" when there's the "single below a list" situation,
     e.g. `TeacherP x $ TeacherR` instead of `TeachersP $ TeachersTeacherP x $
-    TeachersTeacherR`, which is a bit buffalo-buffalo.
+    TeachersTeacherR`, which is a bit buffalo-buffalo
+  - The "start over" caveat does not apply to path naming (i.e. the above
+    example will still have the module `Teachers/Teacher.hs`)
 
 - Name modules to directly match parents and routes, which implies one Handler
   module per route (see example)
 
   **Caveats**:
 
-  - In reality, we need to prevent collisions between versions through additional
-    prefixing of route constructures. We ignore this in the guide and do it only
-    where needed (e.g. in the constructor, but not the module name).
+  - In reality, we need to prevent collisions between versions through
+    additional prefixing of route constructors. We ignore this in this guide.
 
 Example:
 
@@ -146,6 +147,29 @@ Example:
 ## Module Structure
 
 - Prefer in-module request/response types
+
+  - Request type naming: `{Resource}{Method}Body`
+  - Response type naming: `{Resource}{Method}`
+  - NOTE: list responses are `[{Resource}{Method}]`, not `{Resources}{Method}`
+
+  ```hs
+  -- Good
+  data TeacherGet
+
+  getTeachersR :: Handler [TeacherGet]
+  getTeachersR = undefined
+
+  data TeacherPostBody
+
+  -- Bad
+  data Teachers
+
+  getTeachersR :: Handler Teachers
+  getTeachersR = undefined
+
+  data PostTeacher
+  ```
+
 - Prefer in-module data-access functions, until they require sharing
 - Order your module as:
   - Request/response type(s)

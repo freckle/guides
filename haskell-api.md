@@ -27,22 +27,41 @@ endpoints.
 
 ### Naming
 
-- If filtering on an attribute of the main resource: `{attribute}={value}`
-- If filtering on an attribute of a related resource:
-  `{resource}.{attribute}={value}`
-- If one thing has many of another, pluralize the many
+Filters should match the dotted-path of the filtered attribute in the response.
 
-Examples, for a `/teachers` endpoint:
+For example:
 
-- `?name=`, because a Teacher has one name
-- `?school.id=`, because School is a relation, and a Teacher has only one
-- `?students.id=`, because Student is a relation, and a Teacher has many
-- `?grades=`, direct and has many
+```
+/3/teachers
+[ { id:
+  , ...
+  , school:
+    { id:
+    , ...
+    }
+  }
+]
+```
 
-Note that pluralization can occur in either position. For example, Teachers have
-many Students, and (if we assume for the sake of this of this example) Students
-have many levels, then you would filter Teachers by their Students' levels with
-`students.levels=`.
+Here, a School filter would be `school.id`.
+
+```
+/3/students
+[ { id:
+  , ...
+  , schools:
+    [ { id:
+      , ...
+      }
+    ]
+  }
+]
+```
+
+But here, it would be `schools.id`.
+
+If a filter exists that is not for an attribute present in the response, the
+name can be inferred by what it would look like if it were.
 
 ### Semantics
 

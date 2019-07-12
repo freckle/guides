@@ -100,19 +100,13 @@ than our multi-id path-pieces of today.
 
 ---
 
-## Request Shape
-
-- Request bodies can vary by use, but this should be avoided if possible
-
-*TODO*: more to say here?
-
 ## Response fields
 
 - Always include `id`s
 - Within reason, choose attributes directly for the work that is motivating the
   endpoint
-- Include related resources in abbreviated form, Frontend almost always wants
-  names:
+- Include related resources in abbreviated form when Frontend needs extra data
+  about them. For example:
   - `students: [{id:, firstName:, lastName:}]`
   - `school: {id:, name:}`
 
@@ -212,16 +206,22 @@ See `/3/teachers` as a good example.
 
 Do not export your request/response types for use in tests. Instead, re-build
 JSON `Value`s with `object` This ensures you don't have a (de)serialization bug
-that passes the tests because it's used in both places. It also makes it clear
-how to move to `aeson-lens`-based assertions (which are more robust) when that
-makes sense.
+that passes the tests because it's used in both places.
 
 ```hs
 -- Good
 body <- getJsonBody
-body `shouldBe` [object ["id" .= teacherId]]
+body `shouldMatchList` [aesonQQ|
+  [ { id: #{teacherId}
+    }
+  ]
+|]
 
--- Doesn't fail on unrelated attribute changes
+-- Or
+body <- getJsonBody
+body `shouldMatchList` [object ["id" .= teacherId]]
+
+-- This doesn't fail on unrelated attribute changes
 body <- getJsonBody @Value
 body
   ^.. _Array
@@ -232,5 +232,5 @@ body
 
 -- Bad
 body <- getJsonBody
-body `shouldBe` [TeacherGet teacherId]
+body `shouldMatchList` [TeacherGet teacherId]
 ```

@@ -1,5 +1,8 @@
 # Haskell practices
 
+**NOTE**: the code examples here may not follow our current style. They have not
+been maintained for that as things have evolved.
+
 ## Error throwing / exceptions
 
 * Try very hard to avoid partial functions

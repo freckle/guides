@@ -507,7 +507,7 @@ increases boilerplate.
 
 ## Strictness
 
-Add `LANGUAGE StrictData` to modules that contain plain records that will
+Add `LANGUAGE StrictData` to modules that contain only plain records that will
 undergo de/serialization (JSON, CSV, Database, etc).
 
 ## Appendix

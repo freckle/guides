@@ -505,6 +505,11 @@ The fact is that `mono-traversable` is not an abstraction that targets our
 use-case, it decreases type inference, increases cryptic type errors, and
 increases boilerplate.
 
+## Strictness
+
+Add `LANGUAGE StrictData` to modules that contain only plain records that will
+undergo de/serialization (JSON, CSV, Database, etc).
+
 ## Appendix
 
 ### resources

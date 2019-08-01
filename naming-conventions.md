@@ -168,18 +168,62 @@ consensus about this.
 
 ### Database Access
 
-We use the prefix `fetch` to signal retrieving data from the database.
+Database access functions should follow standard prefixes and suffixes for the
+following cases:
 
-Don't do this:
+- `fetch{...}` for a normal `SELECT`
+- `fetch{...}Exists(By{...})` for a `SELECT EXISTS`
+- `count{...}` for a `COUNT`
+
+And should follow a pattern that indicates:
+
+- What it returns, specifically if it returns a whole resource or just one field
+- What its arguments are, specifically if they are whole resources or fields
+- A correct pluralization of arguments and returned values
 
 ```
+{fetch|count}{Resource(Field)}(Exists)(By{Resource(Field)}(And{Resource(Field)}...))
+```
+
+This is to avoid duplication by aiding code search through "obvious" names: if
+you know you need a `Foo` by its `barBat`, you should look for
+`fetchFooByBarBat` before writing it.
+
+```hs
+-- Good
+fetchTeachersBySchoolId :: SchoolId -> SqlPersistT m [Entity Teacher]
+
+fetchTeacherIdsBySchool :: School -> SqlPersistT m [TeacherId]
+
+-- NOTE: We don't go as far as distinguishing Entity or not in this naming, so
+-- these are also Good, with Resource ~ Teacher and Resource ~ Entity School
+fetchTeachersBySchoolId :: SchoolId -> SqlPersistT m [Teacher]
+fetchTeacherIdsBySchool :: Entity School -> SqlPersistT m [TeacherId]
+
+fetchStudentEmailsByFirstNameAndLastName
+  :: NameComponent -- ^ First name
+  -> NameComponent -- ^ Last name
+  -> SqlPersistT m [EmailAddress]
+
+fetchStudentEmailByFirstNameAndLastName
+  :: NameComponent -- ^ First name
+  -> NameComponent -- ^ Last name
+  -> SqlPersistT m (Maybe EmailAddress)
+
+fetchTeacherExistsBySchoolId :: SchoolId -> SqlPersistT m Bool
+
+countSessionsByAssignmentId
+  :: forall assignment session
+   . Session assignment ~ session
+  => Key assignment
+  -> SqlPersistT m Natural
+
+-- Bad
 getAnswers :: SqlReadT [Answer]
-```
 
-Do this:
+fetchTeachersBySchool :: SchoolId -> SqlPersistT m [TeacherId]
 
-```
-fetchAnswers :: SqlReadT [Answer]
+fetchTeachersCountForStudent :: Student -> SqlPersistT m Int64
 ```
 
 ### Database Entities

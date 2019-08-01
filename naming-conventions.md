@@ -193,7 +193,7 @@ you know you need a `Foo` by its `barBat`, you should look for
 -- Good
 fetchTeachersBySchoolId :: SchoolId -> SqlPersistT m [Entity Teacher]
 
-fetchTeacherIdsBySchool :: School
+fetchTeacherIdsBySchool :: School -> SqlPersistT m [TeacherId]
 
 -- NOTE: We don't go as far as distinguishing Entity or not in this naming, so
 -- these are also Good, with Resource ~ Teacher and Resource ~ Entity School

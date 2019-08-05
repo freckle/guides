@@ -90,9 +90,9 @@ This is because:
 ## Status Codes
 
 - 201 for creation
+- 202 for async jobs (with `Link` header)
 - 204 for no content (i.e. our `Empty` responses)
 - 400s MUST follow our `ValidationError` machinery
-- 202 for async jobs (with `Link` header)
 
 ## Pagination
 

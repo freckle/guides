@@ -43,7 +43,7 @@ For example:
 ]
 ```
 
-Here, a School filter would be `school.id`.
+Here, a School filter would be `school.id`: `/3/teachers?school.id=1,2,3`.
 
 ```
 /3/students
@@ -58,7 +58,7 @@ Here, a School filter would be `school.id`.
 ]
 ```
 
-But here, it would be `schools.id`.
+But here, it would be `schools.id`: `/3/students?schools.id=1,2,3`.
 
 If a filter exists that is not for an attribute present in the response, the
 name can be inferred by what it would look like if it were.

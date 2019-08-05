@@ -77,29 +77,6 @@ This is because:
 - We think we can get by with only this level "smart" filtering for a while and
   defer more complexity in this area (e.g. "not", etc).
 
----
-
-**Aside about URL length limits**: We don't know at what size this will be a
-problem. Standards-wise, there is no limit, but browsers and servers do have
-limits and it's recommended to use 2000 as a reference point [ref].
-
-[ref]: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-
-However, I will say this:
-
-- Our current `/foo/:id,:id,:id/bar` does bump into issues of length and it is
-  annoying to resolve because it means a new *route* to find a natural way to
-  group the massive list (i.e. all students in a school will mean changing
-  `/students/...` to `schools/:id`)
-- Doing the same thing in a `GET` param will be much nicer to handle when we
-  encounter it because we would probably already support both `students.id` and
-  `schools.id` in the single endpoint and the Frontend can just switch
-
-Therefore, I find the length concerns for `IN`-queries to be less problematic
-than our multi-id path-pieces of today.
-
----
-
 ## Response fields
 
 - Always include `id`s

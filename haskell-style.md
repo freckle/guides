@@ -41,6 +41,18 @@ done for a few reasons:
 - This gives us a chance to see just how much time we've saved by automating
   what used to be a (possibly tenuous) negotiated consensus
 
+## Whitespace
+
+- Prefer two space indentation
+
+  Exceptions include anything automated (e.g. de-dented `where`) and the leading
+  tabs required in `Makefile`s.
+
+- No trailing whitespace
+
+  No extra spaces at the end of lines, and no extra lines at the end of the file
+  (files should end with exactly one newline).
+
 ## Line Length
 
 **Automated**.

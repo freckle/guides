@@ -1,7 +1,7 @@
 # Haskell Style
 
 **TL;DR**: If it can be automated, it should be automated. If the automated
-outcome has no *objective* readability problems, we should accept it.
+outcome has no _objective_ readability problems, we should accept it.
 
 We use three Haskell auto-formatting tools:
 
@@ -59,7 +59,8 @@ done for a few reasons:
 
 ## Comments
 
-Comments should follow [Haddock style](https://github.com/frontrowed/guides/blob/master/haskell-style.md#haddocks).
+Comments should follow
+[Haddock style](https://github.com/frontrowed/guides/blob/master/haskell-style.md#haddocks).
 
 ## Monad sequences and Haskell arrows
 
@@ -96,8 +97,7 @@ result <-
 m >>= (\x -> )
 ```
 
-In general left bind does not scale well for inline code.
-This is ok.
+In general left bind does not scale well for inline code. This is ok.
 
 ```hs
 (\x -> f x) =<< m
@@ -153,27 +153,27 @@ f :: Int -> Int
 
 Haskell's modules expose some variety in import style:
 
-* Open imports
-* Explicit imports
-* Exclusionary imports
-* Qualified imports
-* Aliased imports
+- Open imports
+- Explicit imports
+- Exclusionary imports
+- Qualified imports
+- Aliased imports
 
 Good style prefers:
 
-* Open imports for common libraries
-  * `base`
-  * `mtl`
-  * custom preludes
-* Explicit imports for bringing lesser known functions in to scope
-* Exclusionary imports for avoiding minor name clashes
-  * `lens`
-* Qualified imports for major name clashes
-  * `containers`
-  * `unordered-containers`
-* Qualified imports for "ad-hoc module schema" (see example)
-* Aliased imports for packaging and exporting many modules in a single module.
-  * creating a custom prelude
+- Open imports for common libraries
+  - `base`
+  - `mtl`
+  - custom preludes
+- Explicit imports for bringing lesser known functions in to scope
+- Exclusionary imports for avoiding minor name clashes
+  - `lens`
+- Qualified imports for major name clashes
+  - `containers`
+  - `unordered-containers`
+- Qualified imports for "ad-hoc module schema" (see example)
+- Aliased imports for packaging and exporting many modules in a single module.
+  - creating a custom prelude
 
 ```haskell
 -- Good
@@ -263,7 +263,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
 
 **Automated**: sorting and formatting of extension pragmas.
 
-* All Haskell packages MUST use the following `default-extensions`:
+- All Haskell packages MUST use the following `default-extensions`:
 
   ```yaml
   default-extensions:
@@ -299,7 +299,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
   extensions MUST be defined via LANGUAGE pragmas in the modules where they're
   needed.
 
-* Leave a blank line after the extensions list
+- Leave a blank line after the extensions list
 
   ```haskell
   {-# LANGAUGE OverloadedStrings #-}
@@ -328,8 +328,8 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
 ### General guides
 
-* Use proper Haddock [markup][]
-* Link all identifiers, anywhere they appear
+- Use proper Haddock [markup][]
+- Link all identifiers, anywhere they appear
 
   Bad
 
@@ -350,7 +350,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   --
   ```
 
-* Use leading documentation (`-- |`) for top-level definitions and trailing
+- Use leading documentation (`-- |`) for top-level definitions and trailing
   documentation (`-- ^`) for record attributes and function arguments
 
   Bad
@@ -482,7 +482,7 @@ Bad
 
 ```hs
 -- | The worse of the @'Thing'@ twins
--- 
+--
 badThing :: Thing
 badThing = Thing 1
 ```
@@ -499,8 +499,8 @@ goodThing = Thing 2
 
 Bodies are optional but encouraged. When present, the following applies:
 
-* Wrap non-literal content at 80 columns (not our usual 120)
-* Surround block elements by a line of whitespace
+- Wrap non-literal content at 80 columns (not our usual 120)
+- Surround block elements by a line of whitespace
 
   Bad
 
@@ -555,7 +555,7 @@ Bodies are optional but encouraged. When present, the following applies:
   theFunction
   ```
 
-* Lists receive a hanging indent
+- Lists receive a hanging indent
 
   Bad
 
@@ -591,7 +591,7 @@ Bodies are optional but encouraged. When present, the following applies:
 
 ### Module organization
 
-* Organize your exports by logical groups or [progressive
+- Organize your exports by logical groups or [progressive
   disclosure][progressive_disclosure] and use section headings
 
   Bad
@@ -622,7 +622,7 @@ Bodies are optional but encouraged. When present, the following applies:
     )
   ```
 
-* Consider adding section documentation
+- Consider adding section documentation
 
   **NOTE**: Summary/Body rules apply!
 
@@ -647,7 +647,7 @@ Bodies are optional but encouraged. When present, the following applies:
     )
   ```
 
-* If you want to separate the definitions *in* the module, use [named
+- If you want to separate the definitions _in_ the module, use [named
   chunks][chunks].
 
   ```hs
@@ -697,5 +697,6 @@ Bodies are optional but encouraged. When present, the following applies:
 
 [markup]: https://www.haskell.org/haddock/doc/html/ch03s08.html
 [chunks]: https://www.haskell.org/haddock/doc/html/ch03s05.html
-[tbaggery]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[tbaggery]:
+  https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [progressive_disclosure]: https://en.wikipedia.org/wiki/Progressive_disclosure

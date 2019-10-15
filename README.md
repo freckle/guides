@@ -26,7 +26,7 @@ Haskell style. **TL;DR**: use Brittany.
 
 ### [Testing](./haskell-testing.md)
 
-Haskell testing practices, *work in progress*.
+Haskell testing practices, _work in progress_.
 
 ### [Open Source](./haskell-open-source.md)
 

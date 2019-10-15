@@ -110,8 +110,9 @@ This is because:
 
   - There's no need to `V3`-prefix everything
   - Things can "start over" when there's the "single below a list" situation,
-    e.g. `TeacherP x $ TeacherR` instead of `TeachersP $ TeachersTeacherP x $
-    TeachersTeacherR`, which is a bit buffalo-buffalo
+    e.g. `TeacherP x $ TeacherR` instead of
+    `TeachersP $ TeachersTeacherP x $ TeachersTeacherR`, which is a bit
+    buffalo-buffalo
   - The "start over" caveat does not apply to path naming (i.e. the above
     example will still have the module `Teachers/Teacher.hs`)
 

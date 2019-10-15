@@ -31,15 +31,15 @@ why they are beneficial.
 
 ## The Terms
 
-* [arrow](#arrow)
-* [morphism](#morphism)
-* [object](#object)
-* [domain](#domain)
-* [codomain](#codomain)
-* [injective](#injective)
-* [surjective](#surjective)
-* [bijective](#bijective)
-* [isomorphism](#isomorphism)
+- [arrow](#arrow)
+- [morphism](#morphism)
+- [object](#object)
+- [domain](#domain)
+- [codomain](#codomain)
+- [injective](#injective)
+- [surjective](#surjective)
+- [bijective](#bijective)
+- [isomorphism](#isomorphism)
 
 ### arrow
 
@@ -82,20 +82,20 @@ The right hand side of an arrow. I.E. The type of the result of a function.
 An injective arrow is a one to one relationship in a single direction. The arrow
 `A -> B` is injective if all values in `A` have an arrow to `B` and distinct
 values in `A` never have an arrow to the same value in `B`. This does not mean
-that all values in `B` have a counterpart in `A`. The function `toDecimal :: Int
--> Decimal` is injective because it will always result in a distinct value for
-every input, but there are strictly more `Decimal`s than `Int`s so the arrow
-only goes in one direction. An injective relationship is important because it
-means that we are not losing precision, but we might lose the ability to return
-to the original type.
+that all values in `B` have a counterpart in `A`. The function
+`toDecimal :: Int -> Decimal` is injective because it will always result in a
+distinct value for every input, but there are strictly more `Decimal`s than
+`Int`s so the arrow only goes in one direction. An injective relationship is
+important because it means that we are not losing precision, but we might lose
+the ability to return to the original type.
 
 ### surjective
 
 A surjection is when there is an arrow from every value in `A` to every value in
-`B`, but arrows may point to the same value. The function `round :: Decimal ->
-Int` is surjective. We can transform any `Decimal` to an `Int`, but 5.3 and 5.4
-will both become 5. Surjective arrows are total, they do not include any
-partiality and functional programmers love that.
+`B`, but arrows may point to the same value. The function
+`round :: Decimal -> Int` is surjective. We can transform any `Decimal` to an
+`Int`, but 5.3 and 5.4 will both become 5. Surjective arrows are total, they do
+not include any partiality and functional programmers love that.
 
 ## bijective
 
@@ -114,7 +114,8 @@ specific use case.
 
 Isomorphism is similar to bijection. Nearly all bijections are isomorphisms. The
 difference is a matter of formulation. An isomorphism has specific laws that it
-must satisfy. An isomorphism exists between `A` and `B` if the arrows `f :: A ->
-B` and `g :: B -> A` satisfy the identity law `f . g = id` and `g . f = id`.
-Isomorphism gives us all the same power as bijection. It is strictly weaker than
-equality, but when we are transforming data it is often all we care about.
+must satisfy. An isomorphism exists between `A` and `B` if the arrows
+`f :: A -> B` and `g :: B -> A` satisfy the identity law `f . g = id` and
+`g . f = id`. Isomorphism gives us all the same power as bijection. It is
+strictly weaker than equality, but when we are transforming data it is often all
+we care about.

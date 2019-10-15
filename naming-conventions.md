@@ -52,11 +52,10 @@ CREATE TABLE ela_adaptive_skill_practice_paragraphs (
 
 We only need to convey that this field is a pointer to "content". Any other
 information we could encode can be understood from context. Furthermore, the
-elided information is more likely to change. In fact, we no longer refer to
-this product as "AdaptiveSkillPractice". It's just "SkillsPractice" now.
-However, because we've encoded superfluous information in the column, the
-Haskell and JSON representations do too, which makes changing it a multi-step
-process.
+elided information is more likely to change. In fact, we no longer refer to this
+product as "AdaptiveSkillPractice". It's just "SkillsPractice" now. However,
+because we've encoded superfluous information in the column, the Haskell and
+JSON representations do too, which makes changing it a multi-step process.
 
 ## Haskell
 
@@ -230,8 +229,8 @@ fetchTeachersCountForStudent :: Student -> SqlPersistT m Int64
 
 Use [`mkPersist`](mkPersist) from [`persistent`](persistent) to generate record
 types corresponding to database tables. [`sqlSettings`](sqlSettings) will
-autoprefix each field with the record's name. Note that the field names given
-in the `persistLowerCase` quasiquotation should exactly match the corresponding
+autoprefix each field with the record's name. Note that the field names given in
+the `persistLowerCase` quasiquotation should exactly match the corresponding
 column name in the database table except that the former is `camelCase` and the
 latter is `snake_case` (see [Postgres](#postgres) above). For example:
 
@@ -336,8 +335,8 @@ JSON keys should always be `camelCase`. String enums that cross language
 barriers should be `snake_case`, since most enums that cross language barriers
 are designed for `postgres` first. Exceptions can be made for short initialisms
 which may be `ALLCAPS` (e.g. `TEKS: MathSystemT`). Short initialisms that are
-part of other identifiers should use `snake_case`
-(e.g. `rti_coordinator: TeacherRoleT`).
+part of other identifiers should use `snake_case` (e.g.
+`rti_coordinator: TeacherRoleT`).
 
 ### Generating Enums from Haskell for Postgres
 
@@ -431,6 +430,8 @@ const TeacherRoles = {
 const role = TeacherRoles.Teacher
 ```
 
-[mkPersist]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
+[mkpersist]:
+  https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
 [persistent]: http://hackage.haskell.org/package/persistent
-[sqlSettings]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings
+[sqlsettings]:
+  https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings

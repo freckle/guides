@@ -174,8 +174,8 @@ if you use `[[` because you want regex or glob matching in one place, don't use
 1. Scripts should validate their options and error with proper [usage
    syntax][usage-syntax] and conventional [exit code][exit-code]:
 
-   [usage-syntax]: https://stackoverflow.com/a/9727046
-   [exit-code]: https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD%204.3-RELEASE&format=html
+   [usage-syntax]: https://stackoverflow.com/a/9727046 [exit-code]:
+   https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD%204.3-RELEASE&format=html
 
    ```sh
    if [ "$#" -lt 2 ]; then
@@ -186,9 +186,10 @@ if you use `[[` because you want regex or glob matching in one place, don't use
 
 1. Scripts should be quiet when successful. Ideally the output of the commands
    invoked by the script stands on their own, without additional print
-   statements. See the *Rule of Silence* [here][rules].
+   statements. See the _Rule of Silence_ [here][rules].
 
-   [rules]: https://en.wikipedia.org/wiki/Unix_philosophy#Eric_Raymond.E2.80.99s_17_Unix_Rules
+   [rules]:
+   https://en.wikipedia.org/wiki/Unix_philosophy#Eric_Raymond.E2.80.99s_17_Unix_Rules
 
 1. Scripts should output error information to `stderr` and use exit codes
    responsibly.

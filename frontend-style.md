@@ -24,12 +24,13 @@ Files pertaining to a single component specific to a feature should be organized
         └── my-component.test.js
 ```
 
-- `my-page/index.js` is a "handler" style component responsible for global
-  state management and API calls
+- `my-page/index.js` is a "handler" style component responsible for external
+  API calls
 - `my-component/index.js` is a "container" style component responsible for
-  internal IO operations like user input or responding to timers
-- `my-component/my-component.js` is a pure, stateless "presentational" style
-  component
+  IO operations like global state management, user input or responding to
+  timers
+- `my-component/my-component.js` is a "presentational" style component with
+  only completely isolated, local state.
 - `my-component/my-component.test.js` contains jest tests for `my-component`
 - `my-component/my-component.scss` contains `scss` rules for `my-component`
   that can be imported using `css modules`

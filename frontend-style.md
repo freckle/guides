@@ -39,7 +39,7 @@ project's central `router`.
 
 ## Formatting
 
-Use `prettier` for autoformatting. This way, we don't need to define a pedantic
+Use [`prettier`](https://prettier.io/) for autoformatting. This way, we don't need to define a pedantic
 formatting style; we just let `prettier` decide for us.
 
 ### JS Style Rules

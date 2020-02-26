@@ -1,6 +1,17 @@
 # Frontend Style Guide
 
-## Structure
+## Required tooling 
+
+These automated tools will warn and/or automatically fix most issues with
+syntax-related style. Any of our rules subsumed by one of these tools is not
+documented here.
+
+- [eslint](https://eslint.org/) for JS/JSX
+- [stylelint](https://stylelint.io/) for CSS/SASS/SCSS
+- [prettier](https://prettier.io/) for JS/JSX autoformatting
+
+Integrating these tools into your preferred editor will make your life easier,
+since CI will not pass without a warning-free codebase.
 
 ## File organization
 
@@ -83,32 +94,6 @@ const item = new Object()
 const item = {}
 ```
 
-Use property value shorthand when possible.
-
-```js
-// bad
-const user = { firstname: firstname }
-
-// good
-const user = { firstname }
-```
-
-Only quote properties that are invalid identifiers.
-
-```js
-// bad
-const user =
-  { "firstname": "Jeff"
-  , "age-group": "old"
-  }
-
-// good
-const user =
-  { firstname: "Jeff"
-  , "age-group": "old"
-  }
-```
-
 #### Arrays
 
 Use array literal syntax to construct arrays
@@ -130,7 +115,7 @@ Prefer stateless components when possible.
 ```jsx
 // bad
 class Link extends React.Component<void, Props, void> {
- render(): React.Element<any> {
+ render(): React.Node {
   return (
     <a href="#foo">Link</a>
   )
@@ -138,7 +123,7 @@ class Link extends React.Component<void, Props, void> {
 }
 
 // good
-function Link(props: Props): React.Element<any> {
+function Link(props: Props): React.Node {
   return <a href="#foo">Link</a>
 }
 ```
@@ -230,14 +215,6 @@ import {MyOtherPage} from '@example/src/my-other-page'
 import {MyComponent} from './my-component'
 import Style from '../my-page/my-page.scss'
 ```
-
-Imports should also be grouped in the following order:
-
-1. Global imports
-1. Absolute imports
-1. Relative imports
-
-This is enforced by `eslint`.
 
 ## Layout & CSS
 
@@ -341,12 +318,3 @@ Use [semantic CSS class names](https://css-tricks.com/semantic-class-names/).
 
 // <div class="copyright">Copyright 2020 Renaissance Inc <div/>
 ```
-
-### Required tooling 
-
-- [eslint](https://eslint.org/) for JS/JSX
-- [stylelint](https://stylelint.io/) for CSS/SASS/SCSS
-- [prettier](https://prettier.io/) for JS/JSX autoformatting
-
-Integrating these tools into your preferred editor will make your life easier,
-since CI will not pass without a warning-free codebase.

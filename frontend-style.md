@@ -180,7 +180,7 @@ export class StudentAdaptiveResultTable extends React.Component<void, StudentAda
  }
 }
 
-function StudentAdaptiveRow(props: StudentAdaptiveResultRowProps): React.Element<any> {
+function StudentAdaptiveRow(props: StudentAdaptiveResultRowProps): React.Node {
   return (
     <tr>
       <td>{props.name}</td>

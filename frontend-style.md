@@ -1,6 +1,6 @@
 # Frontend Style Guide
 
-## Required tooling 
+## Required tooling
 
 These automated tools will warn and/or automatically fix most issues with
 syntax-related style. Any of our rules subsumed by one of these tools is not
@@ -15,14 +15,16 @@ since CI will not pass without a warning-free codebase.
 
 ## File organization
 
-All files should be organized by feature (e.g. math standard practice) instead of function (e.g. backbone collection). This includes:
+All files should be organized by feature (e.g. math standard practice) instead
+of function (e.g. backbone collection). This includes:
 
 - Backbone models & collections
 - Components
 - Jest tests
 - Data mocks for jest tests
 
-Files pertaining to a single component specific to a feature should be organized as follows:
+Files pertaining to a single component specific to a feature should be organized
+as follows:
 
 ```
 .
@@ -35,24 +37,24 @@ Files pertaining to a single component specific to a feature should be organized
         └── my-component.test.js
 ```
 
-- `my-page/index.js` is a "handler" style component responsible for external
-  API calls
-- `my-component/index.js` is a "container" style component responsible for
-  IO operations like global state management, user input or responding to
-  timers
-- `my-component/my-component.js` is a "presentational" style component with
-  only completely isolated, local state.
+- `my-page/index.js` is a "handler" style component responsible for external API
+  calls
+- `my-component/index.js` is a "container" style component responsible for IO
+  operations like global state management, user input or responding to timers
+- `my-component/my-component.js` is a "presentational" style component with only
+  completely isolated, local state.
 - `my-component/my-component.test.js` contains jest tests for `my-component`
-- `my-component/my-component.scss` contains `scss` rules for `my-component`
-  that can be imported using `css modules`
+- `my-component/my-component.scss` contains `scss` rules for `my-component` that
+  can be imported using `css modules`
 
 `my-page` should export a `React` class named `MyPage` to be referenced in the
 project's central `router`.
 
 ## Formatting
 
-Use [`prettier`](https://prettier.io/) for autoformatting. This way, we don't need to define a pedantic
-formatting style; we just let `prettier` decide for us.
+Use [`prettier`](https://prettier.io/) for autoformatting. This way, we don't
+need to define a pedantic formatting style; we just let `prettier` decide for
+us.
 
 ### JS Style Rules
 
@@ -60,7 +62,7 @@ formatting style; we just let `prettier` decide for us.
 
 Avoid variable mutation as much as possible.
 
-Use `const` by default.  If you must reassign a variable, use `let`. Never use
+Use `const` by default. If you must reassign a variable, use `let`. Never use
 `var`.
 
 ```js
@@ -88,10 +90,10 @@ Use literal syntax to construct objects.
 
 ```js
 // bad
-const item = new Object()
+const item = new Object();
 
 // good
-const item = {}
+const item = {};
 ```
 
 #### Arrays
@@ -103,7 +105,7 @@ Use array literal syntax to construct arrays
 const items = new Array();
 
 // good
-const items = []
+const items = [];
 ```
 
 ## JSX Style Rules
@@ -115,16 +117,14 @@ Prefer stateless components when possible.
 ```jsx
 // bad
 class Link extends React.Component<void, Props, void> {
- render(): React.Node {
-  return (
-    <a href="#foo">Link</a>
-  )
- }
+  render(): React.Node {
+    return <a href="#foo">Link</a>;
+  }
 }
 
 // good
 function Link(props: Props): React.Node {
-  return <a href="#foo">Link</a>
+  return <a href="#foo">Link</a>;
 }
 ```
 
@@ -203,17 +203,17 @@ be absolute:
 
 // bad
 
-import {MyComponent} from '@example/src/my-page/my-component'
+import { MyComponent } from "@example/src/my-page/my-component";
 
-import {MyOtherPage} from '../../my-other-page'
-import Style from '../my-page/my-page.scss'
+import { MyOtherPage } from "../../my-other-page";
+import Style from "../my-page/my-page.scss";
 
 // good
 
-import {MyOtherPage} from '@example/src/my-other-page'
+import { MyOtherPage } from "@example/src/my-other-page";
 
-import {MyComponent} from './my-component'
-import Style from '../my-page/my-page.scss'
+import { MyComponent } from "./my-component";
+import Style from "../my-page/my-page.scss";
 ```
 
 ## Layout & CSS
@@ -239,10 +239,10 @@ Avoid bootstrap grid in favor of flexbox:
   <div className="column">Column 3</div>
 </div>
 
-.componentWrapper { 
+.componentWrapper {
   display: flex;
-  
-  .column { 
+
+  .column {
     flex: 1;
   }
 }
@@ -252,7 +252,8 @@ Avoid bootstrap grid in favor of flexbox:
 
 #### Colors
 
-Source colors from [`variables/colors.scss`](https://github.com/freckle/megarepo/blob/master/frontend/fr-materials/css/variables/colors.scss).
+Source colors from
+[`variables/colors.scss`](https://github.com/freckle/megarepo/blob/master/frontend/fr-materials/css/variables/colors.scss).
 
 ```scss
 // bad
@@ -261,19 +262,19 @@ Source colors from [`variables/colors.scss`](https://github.com/freckle/megarepo
   color: #f54040;
 }
 
-
 // good
 
-@import '@fr-materials/css/style.scss';
+@import "@fr-materials/css/style.scss";
 
 .orangeThing {
   color: $sunset-orange;
 }
 ```
 
-Color names are generated using the [Name That Color Tool](http://chir.ag/projects/name-that-color/).
-It should be rare to add a new color to the site. _All new colors should be
-verified by a designer._
+Color names are generated using the
+[Name That Color Tool](http://chir.ag/projects/name-that-color/). It should be
+rare to add a new color to the site. _All new colors should be verified by a
+designer._
 
 #### Margin & Padding
 
@@ -287,7 +288,7 @@ margin: 8px;
 
 // good
 
-@import '@fr-materials/css/style.scss';
+@import "@fr-materials/css/style.scss";
 
 margin: $std-margin-sm;
 ```

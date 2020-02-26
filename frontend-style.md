@@ -149,9 +149,9 @@ colocated as long as they are not exported.
 
 ```jsx
 // bad, Image and Gallery can be both be imported from other modules
-export class Gallery extends React.Component<void, GalleryProps, GalleryState> {
+export class Gallery extends React.Component<GalleryProps, GalleryState> {
  ...
- render(): React.Element<any> {
+ render(): React.Node {
   return (
     <div>
       <Image src="foo.png" />
@@ -165,9 +165,9 @@ export function Image(props: ImageProps): React.Element<any> {
 }
 
 // Good, StudentAdaptiveRow is private to StudentAdaptiveResultTable
-export class StudentAdaptiveResultTable extends React.Component<void, StudentAdaptiveResultTableProps, StudentAdaptiveResultTableState> {
+export class StudentAdaptiveResultTable extends React.Component<StudentAdaptiveResultTableProps, StudentAdaptiveResultTableState> {
  ...
- render(): React.Element<any> {
+ render(): React.Node {
   return (
     <table>
       <StudentAdaptiveResultRow
@@ -286,7 +286,7 @@ Source colors from [`variables/colors.scss`](https://github.com/freckle/megarepo
 
 // good
 
-@import '@fr-materials/css/variables/colors.scss';
+@import '@fr-materials/css/style.scss';
 
 .orangeThing {
   color: $sunset-orange;
@@ -309,7 +309,7 @@ margin: 8px;
 
 // good
 
-@import '@fr-materials/css/variables/settings.scss';
+@import '@fr-materials/css/style.scss';
 
 margin: $std-margin-sm;
 ```

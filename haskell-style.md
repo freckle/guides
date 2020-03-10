@@ -256,6 +256,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
   ```yaml
   default-extensions:
     - BangPatterns
+    - DataKinds
     - DeriveAnyClass
     - DeriveFoldable
     - DeriveFunctor

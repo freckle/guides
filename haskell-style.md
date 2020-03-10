@@ -281,9 +281,6 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - TypeFamilies
   ```
 
-  **NOTE**: `NoImplicitPrelude` may be omitted in packages using the normal,
-  implicit `Prelude` everywhere.
-
   This defines a consistent, and minimally-extended Haskell environment. Other
   extensions MUST be defined via LANGUAGE pragmas in the modules where they're
   needed.

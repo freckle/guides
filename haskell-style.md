@@ -285,6 +285,14 @@ Sort your exports, unless the order matters in your desired Haddock output.
   extensions MUST be defined via LANGUAGE pragmas in the modules where they're
   needed.
 
+  We allow our `entities` package to diverge from this list, since it is almost
+  entirely persistent Entity definitions. Within this package only, we also have
+  the following enabled by default:
+
+  - `QuasiQuotes`
+  - `TemplateHaskell`
+  - `UndecidableInstances`
+
 - Leave a blank line after the extensions list
 
   ```haskell

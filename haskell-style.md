@@ -264,6 +264,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - DeriveLift
     - DeriveTraversable
     - DerivingStrategies
+    - DerivingVia
     - FlexibleContexts
     - FlexibleInstances
     - GADTs

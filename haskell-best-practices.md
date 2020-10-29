@@ -183,9 +183,9 @@ sf :: City
 sf = City "San Francisco"
 ```
 
-Some legacy code at FR uses `Tagged` and `TypeLits`. This style [should be
-avoided](https://tech.freckle.com/2020/10/26/tagged-is-not-a-newtype/) in favor
-of proper newtypes.
+Some legacy code at FR uses `Tagged` and `TypeLits`. This style
+[should be avoided](https://tech.freckle.com/2020/10/26/tagged-is-not-a-newtype/)
+in favor of proper newtypes.
 
 ```haskell
 -- Don't do this

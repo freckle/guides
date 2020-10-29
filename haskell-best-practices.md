@@ -174,19 +174,23 @@ Newtypes in Haskell are used for 3 primary purposes:
 1. To refine the type (i.e. limit it's inhabitants)
 1. To define new/different instances
 
-At FR, we seldom do 1. Instead we prefer to use `Tagged` and `TypeLits`:
-
-```haskell
-sf :: Tagged "City" String
-sf = "San Francisco"
-```
-
-instead of
+1 allows us to communicate clearly and increase type safety:
 
 ```haskell
 newtype City = City { unCity :: String }
+
 sf :: City
 sf = City "San Francisco"
+```
+
+Some legacy code at FR uses `Tagged` and `TypeLits`. This style [should be
+avoided](https://tech.freckle.com/2020/10/26/tagged-is-not-a-newtype/) in favor
+of proper newtypes.
+
+```haskell
+-- Don't do this
+sf :: Tagged "City" String
+sf = "San Francisco"
 ```
 
 2 looks like:
@@ -203,10 +207,13 @@ mkNatural n = if n >= 0 then Just (Natural n) else Nothing
 
 ```haskell
 newtype Add = Add { unAdd :: Int }
+
 instance Monoid Add where
   mempty = 0
   mappend = (+)
+
 newtype Mult = Mult { unMult :: Int }
+
 instance Monoid Mult where
   mempty = 1
   mappend = (*)

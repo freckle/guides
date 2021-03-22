@@ -97,7 +97,7 @@ possible. Issues include:
 - The necessity of sending monolithic resources to a `PUT` when most uses are
   changing specific details.
 - The ability to misinterpret an `undefined` as a `null` and have untintended
-  consequences when evolving a handler. This is exasterbated by the default
+  consequences when evolving a handler. This is exacerbated by the default
   parsing behavior of `Maybe a` in `aeson`.
 - The complexities that arise from extra validation or lack of validation
   especially when differing rules around mutability and roles arise.

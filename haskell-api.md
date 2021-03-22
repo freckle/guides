@@ -87,6 +87,24 @@ This is because:
   - `students: [{id:, firstName:, lastName:}]`
   - `school: {id:, name:}`
 
+## HTTP Methods
+
+### Prefer `PATCH` over `PUT`
+
+`PUT` routes contain semantics that easily lead to bugs. We prefer `PATCH` when
+possible. Issues include:
+
+* The necessity of sending monolithic resources to a `PUT` when most uses are
+  changing specific details.
+* The ability to misinterpret an `undefined` as a `null` and have untintended
+  consequences when evolving a handler. This is exasterbated by the default
+  parsing behavior of `Maybe a` in `aeson`.
+* The complexities that arise from extra validation or lack of validation
+  especially when differing rules around mutability and roles arise.
+
+If you are creating a new `PUT` consider if it could be expressed in a more
+granular `PATCH` semantic.
+
 ## Status Codes
 
 - 201 for creation

@@ -64,27 +64,3 @@ To determine what changes are "breaking", use the following:
 ![](./pvp-chart.png)
 
 With `A=EPOCH`, `B=MAJOR`, and `C=MINOR`.
-
-## Release
-
-All (interested) Frecklers should be in the Maintainers group of our Hackage
-libraries, with permission to upload new versions.
-
-To release a new version:
-
-1. Update the package version
-1. Add a `CHANGELOG` entry
-1. Open the above in a Pull Request and get review
-1. Once merged, run the following from `main`:
-
-   ```console
-   stack upload --pvp-bounds both .
-   git tag --sign --message vX.Y.Z vX.Y.Z
-   git push --follow-tags
-   ```
-
-   Omit `--sign` if you're not configured to GPG-sign commits.
-
-**NOTE**: We should not have version bounds in our source tree (e.g.
-`package.yaml`). Instead, automatically set them at the time of release via
-`stack upload --pvp-bounds`.

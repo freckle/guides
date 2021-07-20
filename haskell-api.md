@@ -112,7 +112,8 @@ granular `PATCH` semantic.
 - 204 for no content (i.e. our `Empty` responses)
 - 400s MUST follow our `ValidationError` machinery
 
-[long-running-operations]: https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#13-long-running-operations
+[long-running-operations]:
+  https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#13-long-running-operations
 
 ## Pagination
 

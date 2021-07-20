@@ -108,9 +108,11 @@ granular `PATCH` semantic.
 ## Status Codes
 
 - 201 for creation
-- 202 for async jobs (with `Link` header)
+- 202 for [Long running operations][long-running-operations]
 - 204 for no content (i.e. our `Empty` responses)
 - 400s MUST follow our `ValidationError` machinery
+
+[long-running-operations]: https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#13-long-running-operations
 
 ## Pagination
 

@@ -5,29 +5,37 @@
 Prefer stateless endpoints. Sessions are used to authorize data access, but not
 choose what data to return.
 
-- Good:
-  - `/3/students?schools.id=x,y,z`
-  - `ApiClient.fetch("/3/students", { "schools.id": me.schoolIds })`
-- Bad:
-  - `/3/school-admins/me/students`
-  - `ApiClient.fetch("/3/school-admins/me/students")`
+Good:
+
+- `/3/students?schools.id=x,y,z`
+- `ApiClient.fetch("/3/students", { "schools.id": me.schoolIds })`
+
+Bad:
+
+- `/3/school-admins/me/students`
+- `ApiClient.fetch("/3/school-admins/me/students")`
 
 ## Parameters
 
-We want to :heart: query parameters as a way to keep the number of distinct
-endpoints lower by supporting more complex filtering combinations within each
-endpoints.
+Prefer filtering by query parameter instead of making distinct endpoints
+filtered by their path-pieces.
 
-- Good: `/3/students?schools.id=x,y,z&teachers.id=a,b,c`
-- Bad:
-  - `/3/schools/:id/students`
-  - `/3/teachers/:id/students`
-  - `/3/schools/:id/teachers/:id/students`
-  - etc, forever
+Good:
+
+- `/3/students?schools.id=x,y,z&teachers.id=a,b,c`
+
+Bad:
+
+- `/3/schools/:id/students`
+- `/3/teachers/:id/students`
+- `/3/schools/:id/teachers/:id/students`
+
+
 
 ### Naming
 
-Filters should match the dotted-path of the filtered attribute in the response.
+Filters should match the dotted-path of the filtered attribute in the response,
+to aid in discoverability and consistency.
 
 For example:
 
@@ -37,13 +45,14 @@ For example:
   , ...
   , school:
     { id:
+    , createdAt:
     , ...
     }
   }
 ]
 ```
 
-Here, a School filter would be `school.id`: `/3/teachers?school.id=1,2,3`.
+Here, a School filter would be `school.id` or `school.created-at`.
 
 ```
 /3/students

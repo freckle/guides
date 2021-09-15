@@ -37,7 +37,10 @@ Bad:
 Filters should match the dotted-path of the filtered attribute in the response,
 to aid in discoverability and consistency.
 
-For example:
+Parameters must be hyphen-case (despite fields being camelCase in responses) to
+account for that fact that URLs are case-insensitive.
+
+For example, given:
 
 ```
 /3/teachers

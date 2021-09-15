@@ -30,7 +30,21 @@ Bad:
 - `/3/teachers/:id/students`
 - `/3/schools/:id/teachers/:id/students`
 
+### Operations
 
+For complex filtering, follow an "operation suffix" syntax,
+
+Good:
+
+- `status[in]=draft,review`
+- `completed-at[gt]=...&completed-at[lte]=...`
+
+Bad:
+
+- `status=draft&status=review`
+- `from=...&to=...`
+
+Endpoints should support parameters without an operation suffix like `[in]`.
 
 ### Naming
 
@@ -74,20 +88,6 @@ But here, it would be `schools.id`: `/3/students?schools.id=1,2,3`.
 
 If a filter exists that is not for an attribute present in the response, the
 name can be inferred by what it would look like if it were.
-
-### Semantics
-
-Prefer `IN` equality semantics.
-
-- Good: `{attribute}={value1},{value2},{value3},...`
-- Bad: `{attribute}={value}`
-
-This is because:
-
-- It's just as easy to support as direct equality
-- It reduces to the expected `EQUALS` semantics when given one value
-- We think we can get by with only this level "smart" filtering for a while and
-  defer more complexity in this area (e.g. "not", etc).
 
 ## Response fields
 

@@ -182,8 +182,13 @@ For example, assuming `GET /3/teachers/7654` yields
   "phoneNumber": null
 }
 
-// Do nothing, still updates `updatedAt`
+// Updates `updatedAt`
 {
+}
+
+// Updates `updatedAt` (immutable fields and unsupported fields are ignored)
+{
+  "createdAt": "2019-11-10T15:29:16.239Z"
 }
 ```
 
@@ -193,11 +198,6 @@ However, `PATCH /3/teachers/7654` would fail given the following payloads
 // BAD REQUEST, trying to unset a required field
 {
   "email": null
-}
-
-// BAD REQUEST, trying to set a field that cannot be modified
-{
-  "createdAt": "2019-11-10T15:29:16.239Z"
 }
 
 // BAD REQUEST, validation found `ZZ` is not within `USA`

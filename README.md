@@ -1,4 +1,4 @@
-# Front Row Education Guides
+# Freckle Guides
 
 Front Row guides and best practices
 

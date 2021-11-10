@@ -138,7 +138,6 @@ A well-formed `PATCH` endpoint
 - Should not create resources (that's the role of `POST`).
 - Should allow for fields to be optional, even allowing for entirely empty
   `PATCH` objects.
-- Should not allow for unsupported keys.
 
 #### Structural similarities to `GET`
 
@@ -203,11 +202,6 @@ However, `PATCH /3/teachers/7654` would fail given the following payloads
 // BAD REQUEST, trying to set a field that cannot be modified
 {
   "createdAt": "2019-11-10T15:29:16.239Z"
-}
-
-// BAD REQUEST, trying to set an unsupported field
-{
-  "unsupportedField": "hi"
 }
 
 // BAD REQUEST, validation found `ZZ` is not within `USA`

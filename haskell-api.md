@@ -132,9 +132,6 @@ A well-formed `PATCH` endpoint
 - Should accept `null` to unset nullable fields, disallowing it for
   non-nullables.
 - Should 404 if a resource with the route's identifier(s) does not exist.
-- Should not allow for update-scoping information within the `PATCH` object. If
-  scoping information is absolutely necessary, it should be include in query
-  params.
 - Should not create resources (that's the role of `POST`).
 - Should allow for fields to be optional, even allowing for entirely empty
   `PATCH` objects.

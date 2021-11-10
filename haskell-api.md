@@ -126,8 +126,9 @@ Modifications to an existing resource should be made via a `PATCH` request.
 A well-formed `PATCH` endpoint
 
 - Must update an entity's `updatedAt` field, if present.
-- Should return the modified resource. The resource should be re-fetched for
-  ease of testing and to ensure the update was correctly persisted.
+- Should return the modified resource. The resource should be re-fetched from
+  the database for ease of testing and to ensure the update was correctly
+  persisted.
 - Must accept `null` to unset nullable fields, disallowing it for
   non-nullables.
 - Must 404 if a resource with the route's identifier(s) does not exist.

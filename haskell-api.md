@@ -125,16 +125,16 @@ Modifications to an existing resource should be made via a `PATCH` request.
 
 A well-formed `PATCH` endpoint
 
-- Should update an entity's `updatedAt` field, if present.
-- Should return an empty response or the modified resource. Ideally, if the
-  latter, the resource should be re-fetched for ease of testing and to ensure
+- Must update an entity's `updatedAt` field, if present.
+- Must return an empty response or the modified resource. If the latter, the
+  the resource should be re-fetched for ease of testing and to ensure
   the update was correctly persisted.
-- Should accept `null` to unset nullable fields, disallowing it for
+- Must accept `null` to unset nullable fields, disallowing it for
   non-nullables.
-- Should 404 if a resource with the route's identifier(s) does not exist.
-- Should not create resources (that's the role of `POST`).
-- Should allow for fields to be optional, even allowing for entirely empty
-  `PATCH` objects.
+- Must 404 if a resource with the route's identifier(s) does not exist.
+- Must not create resources (that's the role of `POST`).
+- Must allow for fields to be optional, even allowing for entirely empty `PATCH`
+  objects.
 
 #### Structural similarities to `GET`
 

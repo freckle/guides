@@ -182,7 +182,7 @@ For example, assuming `GET /3/teachers/7654` yields
   "phoneNumber": null
 }
 
-// Do nothing, no-op update
+// Do nothing, still updates `updatedAt`
 {
 }
 ```

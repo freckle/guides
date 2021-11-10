@@ -124,36 +124,39 @@ Modifications to an existing resource should be made via a `PATCH` request.
 ### Specific guidelines
 
 A well-formed `PATCH` endpoint
- - Should update an entity's `updatedAt` field, if present.
- - Should return an empty response or the modified resource. Ideally, if the
-   latter, the resource should be re-fetched for ease of testing and to ensure
-   the update was correctly persisted.
- - Should accept `null` to unset nullable fields, disallowing it for
-   non-nullables.
- - Should 404 if a resource with the route's identifier(s) does not exist.
- - Should not allow for update-scoping information within the `PATCH` object. If
-   scoping information is absolutely necessary, it should be include in query
-   params.
- - Should not create resources (that's the role of `POST`).
- - Should allow for fields to be optional, even allowing for entirely empty
-   `PATCH` objects.
- - Should not allow for unsupported keys.
+
+- Should update an entity's `updatedAt` field, if present.
+- Should return an empty response or the modified resource. Ideally, if the
+  latter, the resource should be re-fetched for ease of testing and to ensure
+  the update was correctly persisted.
+- Should accept `null` to unset nullable fields, disallowing it for
+  non-nullables.
+- Should 404 if a resource with the route's identifier(s) does not exist.
+- Should not allow for update-scoping information within the `PATCH` object. If
+  scoping information is absolutely necessary, it should be include in query
+  params.
+- Should not create resources (that's the role of `POST`).
+- Should allow for fields to be optional, even allowing for entirely empty
+  `PATCH` objects.
+- Should not allow for unsupported keys.
 
 #### Structural similarities to `GET`
 
 As a rule-of-thumb for a given resource, `PATCH` requests share a similar shape
 to `GET` requests in that
- - they should have the same route (e.g. `/3/teachers/7654` would `GET` or
-   `PATCH` the teacher with id `7654`),
- - `PATCH` objects should resemble the fields yielded by the corresponding `GET`,
-   albeit `PATCH` fields are (1) optional, (2) may allow additional fields or (3)
-   disallow the modification of certain fields (e.g. `id`, `createdAt`), and
- - if a `PATCH` response is non-empty, it should be the same payload that would
-   be returned by a call to the corresponding `GET`.
+
+- they should have the same route (e.g. `/3/teachers/7654` would `GET` or
+  `PATCH` the teacher with id `7654`),
+- `PATCH` objects should resemble the fields yielded by the corresponding `GET`,
+  albeit `PATCH` fields are (1) optional, (2) may allow additional fields or (3)
+  disallow the modification of certain fields (e.g. `id`, `createdAt`), and
+- if a `PATCH` response is non-empty, it should be the same payload that would
+  be returned by a call to the corresponding `GET`.
 
 #### Example
-   
+
 For example, assuming `GET /3/teachers/7654` yields
+
 ```json
 {
   "id": 7654,
@@ -166,12 +169,13 @@ For example, assuming `GET /3/teachers/7654` yields
   "country": "USA",
   "gradesTaught": ["K"],
   "createdAt": "2021-11-10T15:29:16.239Z",
-  "updatedAt": "2021-11-10T15:29:16.239Z",
+  "updatedAt": "2021-11-10T15:29:16.239Z"
 }
 ```
 
 `PATCH /3/teachers/7654` could accept the following update payloads
-``` javascript
+
+```javascript
 // Change the teacher's name
 {
   "givenName": "Arnold",
@@ -189,7 +193,8 @@ For example, assuming `GET /3/teachers/7654` yields
 ```
 
 However, `PATCH /3/teachers/7654` would fail given the following payloads
-``` javascript
+
+```javascript
 // BAD REQUEST, trying to unset a required field
 {
   "email": null

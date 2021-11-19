@@ -117,6 +117,98 @@ possible. Issues include:
 If you are creating a new `PUT` consider if it could be expressed in a more
 granular `PATCH` semantic.
 
+### `PATCH` semantics
+
+Modifications to an existing resource should be made via a `PATCH` request.
+
+### Specific guidelines
+
+A well-formed `PATCH` endpoint
+
+- Must update an entity's `updatedAt` field, if present.
+- Should return the modified resource. The resource should be re-fetched from
+  the database for ease of testing and to ensure the update was correctly
+  persisted.
+- Must accept `null` to unset nullable fields, disallowing it for
+  non-nullables.
+- Must 404 if a resource with the route's identifier(s) does not exist.
+- Must not create resources (that's the role of `POST`).
+- Must allow for fields to be optional, even allowing for entirely empty `PATCH`
+  objects.
+
+#### Structural similarities to `GET`
+
+As a rule-of-thumb for a given resource, `PATCH` requests share a similar shape
+to `GET` requests in that
+
+- they should have the same route (e.g. `/3/teachers/7654` would `GET` or
+  `PATCH` the teacher with id `7654`),
+- `PATCH` objects should resemble the fields yielded by the corresponding `GET`,
+  albeit `PATCH` fields are (1) optional, (2) may allow additional fields or (3)
+  disallow the modification of certain fields (e.g. `id`, `createdAt`), and
+- if a `PATCH` response is non-empty, it should be the same payload that would
+  be returned by a call to the corresponding `GET`.
+
+#### Example
+
+For example, assuming `GET /3/teachers/7654` yields
+
+```json
+{
+  "id": 7654,
+  "givenName": "John",
+  "surname": "Kimble",
+  "email": "jk@example.com",
+  "phoneNumber": "555-555 5555",
+  "addressLines": ["1234 Hollywood Dr., Hollywood, CA"],
+  "administrativeArea": "CA",
+  "country": "USA",
+  "gradesTaught": ["K"],
+  "createdAt": "2021-11-10T15:29:16.239Z",
+  "updatedAt": "2021-11-10T15:29:16.239Z"
+}
+```
+
+`PATCH /3/teachers/7654` could accept the following update payloads
+
+```javascript
+// Change the teacher's name
+{
+  "givenName": "Arnold",
+  "surname": "Schwarzenegger"
+}
+
+// Remove the teacher's phone number
+{
+  "phoneNumber": null
+}
+
+// Updates `updatedAt`
+{
+}
+
+// Updates `updatedAt` (immutable fields and unsupported fields are ignored)
+{
+  "createdAt": "2019-11-10T15:29:16.239Z"
+}
+```
+
+However, `PATCH /3/teachers/7654` would fail given the following payloads
+
+```javascript
+// BAD REQUEST, trying to unset a required field
+{
+  "email": null
+}
+
+// BAD REQUEST, validation found `ZZ` is not within `USA`
+{
+  "addressLines": ["1234 Hollywood Dr., Hollywood, ZZ"],
+  "administrativeArea": "ZZ",
+  "country": "USA"
+}
+```
+
 ## Status Codes
 
 - 201 for creation

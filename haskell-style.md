@@ -274,6 +274,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - NoImplicitPrelude
     - NoMonomorphismRestriction
     - OverloadedStrings
+    - QuasiQuotes
     - RankNTypes
     - RecordWildCards
     - ScopedTypeVariables
@@ -290,7 +291,6 @@ Sort your exports, unless the order matters in your desired Haddock output.
   entirely persistent Entity definitions. Within this package only, we also have
   the following enabled by default:
 
-  - `QuasiQuotes`
   - `TemplateHaskell`
   - `UndecidableInstances`
 

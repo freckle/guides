@@ -692,6 +692,5 @@ Bodies are optional but encouraged. When present, the following applies:
 
 [markup]: https://www.haskell.org/haddock/doc/html/ch03s08.html
 [chunks]: https://www.haskell.org/haddock/doc/html/ch03s05.html
-[tbaggery]:
-  https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[tbaggery]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [progressive_disclosure]: https://en.wikipedia.org/wiki/Progressive_disclosure

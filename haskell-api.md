@@ -290,8 +290,7 @@ response types.
    data ApiTeacherSetPassword
    ```
 
-1. An API Type should not be exported unless in a module of only it (because
-   it's shared)
+1. An API Type should not be exported unless it is shared and in its own module
 
    This is because using un-prefixed record fields, and simple deriving of
    instances, is preferred. Keeping it local or in its own dedicated module can

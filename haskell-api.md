@@ -260,40 +260,43 @@ Example:
         / StudentCoursesR GET   --> Handlers/V3/Students/Student/Courses.hs
 ```
 
+## API Types
+
+Prefer distinct types for requests and responses that are only used for that. We
+call these "API Types". Do not use persistent Entity types as API request or
+response types.
+
+1. A response API Type should be named `Api{Resource}` and should be re-used
+   anywhere `Resource` appears in the API.
+
+   If the same concept takes on a different shape in different places, it should
+   be considered a different Resource, with a different name. For example,
+   `ApiTeacher`, `ApiAbbreviatedTeacher`, `ApiTeacherWithSchool`,
+   `ApiUsageReportTeacher`.
+
+1. A request API Type should be named `Api{Action}{Resource}({Target})`.
+
+   ```hs
+   -- Good (Target omitted, acting on entire resource)
+   data ApiCreateTeacher
+   data ApiDeleteTeacher
+
+   -- Good (Target included)
+   data ApiSetTeacherPassword
+
+   -- Bad
+   data TeacherPUT
+   data CreateApiTeacher
+   data ApiTeacherSetPassword
+   ```
+
+1. An API Type should not be exported unless it is shared and in its own module
+
+   This is because using un-prefixed record fields, and simple deriving of
+   instances, is preferred. Keeping it local or in its own dedicated module can
+   prevent collision-related problems.
+
 ## Module Structure
-
-- Prefer in-module request/response types
-
-  - Request type naming: `{Resource}{Method}Body`
-  - Response type naming: `{Resource}{Method}`
-  - NOTE: list responses are `[{Resource}{Method}]`, not `{Resources}{Method}`
-
-  ```hs
-  -- Good
-  data TeacherGet
-
-  getTeachersR :: Handler [TeacherGet]
-  getTeachersR = undefined
-
-  data TeacherPost
-  data TeacherPostBody
-
-  postTeacherR :: Handler TeacherPost
-  postTeacherR = do
-    body <- requireJsonBody @TeacherPostBody
-
-  -- Bad
-  data Teachers
-
-  getTeachersR :: Handler Teachers
-  getTeachersR = undefined
-
-  data PostTeacher
-
-  postTeacherR :: Handler (Entity Teacher)
-  postTeacherR = do
-    body <- requireJsonBody @PostTeacher
-  ```
 
 - Prefer in-module data-access functions, until they require sharing
 - Order your module as:
@@ -302,8 +305,6 @@ Example:
   - Repeat if more than one handler
   - Internal functions
 - Document your endpoints
-
-See `/3/teachers` as a good example.
 
 ## Testing
 

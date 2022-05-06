@@ -326,6 +326,10 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 - Use proper Haddock [markup][]
 - Link all identifiers, anywhere they appear
 
+  Linked identifiers will automatically be monospace, so you don't need to
+  `@'DoThis'@`. However, if you have an identifier as part of a larger monospace
+  phrase, you will need to `@'Maybe' ('Do', 'This')@`.
+
   Bad
 
   ```hs
@@ -338,10 +342,10 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Good
 
   ```hs
-  -- | Construct a @'FlipFlop'@
+  -- | Construct a 'FlipFlop'
   --
   -- If the size is right, you will get a @'Right' 'FlipFlop'@, otherwise a
-  -- @'Left'@.
+  -- 'Left'.
   --
   ```
 
@@ -438,6 +442,37 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
     }
   ```
 
+- Don't use Haddock where it doesn't belong
+
+  Haddock is not great about ignoring its syntax when it doesn't expect it.
+  Introducing such cases can case the documentation build to fail.
+
+  Bad
+
+  ```hs
+  foo = do
+    -- | Here's a note about a thing
+    let some = variable
+
+    doTheThing -- ^ Careful here
+   where
+    -- | And another note
+    variable = other
+  ```
+
+  Good
+
+  ```hs
+  foo = do
+    -- Here's a note about a thing
+    let some = variable
+
+    doTheThing -- Careful here
+   where
+    -- And another note
+    variable = other
+  ```
+
 ### Summaries
 
 Summaries must be a single, short (e.g. non-wrapping), capitalized sentence; not
@@ -476,7 +511,7 @@ Summary and its associated top-level definition:
 Bad
 
 ```hs
--- | The worse of the @'Thing'@ twins
+-- | The worse of the 'Thing' twins
 --
 badThing :: Thing
 badThing = Thing 1
@@ -485,7 +520,7 @@ badThing = Thing 1
 Good
 
 ```hs
--- | The better of the @'Thing'@ twins
+-- | The better of the 'Thing' twins
 goodThing :: Thing
 goodThing = Thing 2
 ```

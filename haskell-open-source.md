@@ -1,7 +1,9 @@
 # Best Practices
 
 1. If authoring a distinct package of reasonable size and generic utility,
-   prefer starting a separate, public repository utilized as a Git dependency
+   prefer starting a separate, public repository utilized as a Git dependency.
+   A Haskell library template includes common setup for tooling and actions:
+   `gh repo create --template freckle/haskell-library-template`
 
 When working in a public repository:
 

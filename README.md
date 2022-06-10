@@ -28,12 +28,12 @@ Haskell style. **TL;DR**: use Brittany.
 
 Haskell testing practices, _work in progress_.
 
-### [Open Source](./haskell-open-source.md)
-
-Processes and practices for our open source libraries.
-
 ## Shell
 
 ### [Style](./shell-style.md)
 
 Shell style. **TL;DR**: use ShellCheck and shfmt.
+
+## [Open Source](./open-source.md)
+
+Processes and practices for our open source libraries.

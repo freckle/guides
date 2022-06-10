@@ -3,7 +3,12 @@
 1. If authoring a distinct package of reasonable size and generic utility,
    prefer starting a separate, public repository utilized as a Git dependency.
 
-   Templates may exist for common cases, such as a [Haskell library][gh-hlt].
+   Templates may exist for common cases, such as a [Haskell library][gh-hlt] or
+   a [TypeScript GitHub Action][gh-tga]. If one doesn't exist, consider making
+   one and then using it to create your package.
+
+   [gh-htl]: https://github.com/freckle/haskell-library-template
+   [gh-tga]: https://github.com/freckle/typescript-action-template
 
 When working in a public repository:
 
@@ -12,8 +17,9 @@ When working in a public repository:
    Configure GitHub to only allow Squash and Rebase strategies.
 
 1. Maintain a professional atmosphere in Issue and Pull Request comments
-1. Release to Hackage and Stackage once libraries become stable
-1. Use proper versioning for released packages (see below)
+1. Formally release early (e.g. to NPM or Hackage/Stackage), as soon as the
+   library becomes stable
+1. Use proper versioning for released packages
 
 ## Licensing
 
@@ -45,26 +51,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-## Versioning
-
-Released packages should use a version string of:
-
-```
-EPOCH.MAJOR.MINOR.PATCH
-```
-
-Where
-
-1. A rewrite or major shift in API happens in `EPOCH`
-1. Breaking changes may only happen in `MAJOR` (or `EPOCH`)
-1. New (non-breaking) API additions happen in `MINOR`
-1. Bug fixes that don't effect the API happen in `PATCH`
-
-To determine what changes are "breaking", use the following:
-
-![](./pvp-chart.png)
-
-With `A=EPOCH`, `B=MAJOR`, and `C=MINOR`.
-
-[gh-hlt]: https://github.com/freckle/haskell-library-template

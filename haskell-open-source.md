@@ -3,7 +3,7 @@
 1. If authoring a distinct package of reasonable size and generic utility,
    prefer starting a separate, public repository utilized as a Git dependency.
 
-Templates may exist for common cases, such as a [Haskell library][gh-hlt].
+   Templates may exist for common cases, such as a [Haskell library][gh-hlt].
 
 When working in a public repository:
 

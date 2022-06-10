@@ -3,7 +3,7 @@
 1. If authoring a distinct package of reasonable size and generic utility,
    prefer starting a separate, public repository utilized as a Git dependency.
 
-   Templates may exist for common cases, such as a [Haskell library][gh-hlt], or
+   Templates may exist for common cases, such as a [Haskell library][gh-hlt] or
    a [TypeScript GitHub Action][gh-tga]. If one doesn't exist, consider making
    one and then using it to create your package.
 

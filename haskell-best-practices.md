@@ -82,6 +82,32 @@ nicely both against raw JSON text and against Value types.
   - [Haddocks](https://hackage.haskell.org/package/lens-aeson-1.0.0.3/docs/Data-Aeson-Lens.html)
   - [Blog post](http://dev.stephendiehl.com/hask/#lens-aeson)
 
+Some Engineers prefer named functions (`view`, `set`) and some prefer the
+equivalent operators (`(^.)`, `(.~)`). We do not prescribe one way or the other,
+but do not mix them within a module.
+
+```hs
+-- Bad
+& set fooL "foo"
+. barL ?~ "bar"
+. over bazL (<> 2)
+
+-- Good
+& set fooL "foo"
+. set barL (Just "bar")
+. over bazL (<> 2)
+
+-- Also good
+& fooL .~ "foo"
+. barL ?~ "bar"
+. bazL %~ (<> 2)
+
+-- Also good
+& fooL .~ "foo"
+. barL ?~ "bar"
+. bazL <>~ 2
+```
+
 ## Script Haskell
 
 [Stack Script Interpreter](https://github.com/commercialhaskell/stack/wiki/Script-interpreter)

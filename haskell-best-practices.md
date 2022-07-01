@@ -676,8 +676,10 @@ The following are some things that may cause them, along with their fixes:
 
   Use a pure `Bool` expression with `prop`.
 
-If you do run into ambiguity, prefer Type Applications (over type signatures or
-annotations) to resolve it.
+If you do run into ambiguity, prefer [Type Applications][] (over type signatures
+or annotations) to resolve it.
+
+[type applications]: https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/type_applications.html
 
 ## Appendix
 

@@ -492,7 +492,7 @@ Each project should have a `TestImport` used for all specs. Optionally, a
 `TestImport.IO` version can exist for writing non-App specs in `IO`.
 
 ```hs
--- Bad
+-- Bad: using TestImport as a module and not the "prelude"
 module Project.FooSpec
   ( spec
   ) where
@@ -503,7 +503,7 @@ import Project.App
 import Project.Lib
 import TestImport
 
--- Also Bad
+-- Also Bad: Using Hspec directly, and treating it like a "prelude"
 module Project.FooSpec
   ( spec
   ) where
@@ -514,7 +514,7 @@ import Project.Prelude
 import Project.App
 import Project.Lib
 
--- Good
+-- Good: exactly one prelude module, and it is TestImport
 module Project.FooSpec
   ( spec
   ) where
@@ -527,7 +527,7 @@ spec :: Spec
 spec = withApp loadApp $ do
   describe "myAppFunction" $ do
 
--- Also Good
+-- Also Good: same, but for an IO spec
 module Project.FooSpec
   ( spec
   ) where

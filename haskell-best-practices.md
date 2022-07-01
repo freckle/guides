@@ -473,6 +473,213 @@ increases boilerplate.
 Add `LANGUAGE StrictData` to modules that contain only plain records that will
 undergo de/serialization (JSON, CSV, Database, etc).
 
+## Testing
+
+### Export Lists
+
+```hs
+-- Bad
+module FooSpec where
+
+-- Good
+module FooSpec
+  ( spec
+  ) where
+```
+
+### Imports
+
+Each project should have a `TestImport` used for all specs. Optionally, a
+`TestImport.IO` version can exist for writing non-App specs in `IO`.
+
+```hs
+-- Bad
+module Project.FooSpec
+  ( spec
+  ) where
+
+import Project.Prelude
+
+import Project.App
+import Project.Lib
+import TestImport
+
+-- Also Bad
+module Project.FooSpec
+  ( spec
+  ) where
+
+import Test.Hspec
+
+import Project.Prelude
+import Project.App
+import Project.Lib
+
+-- Good
+module Project.FooSpec
+  ( spec
+  ) where
+
+import TestImport
+
+import Project.App
+
+spec :: Spec
+spec = withApp loadApp $ do
+  describe "myAppFunction" $ do
+
+-- Also Good
+module Project.FooSpec
+  ( spec
+  ) where
+
+import TestImport.IO
+
+import Project.Lib
+
+spec :: Spec
+spec = do
+  describe "myPureFunction $ do
+```
+
+#### CallStack
+
+Hspec uses the `HasCallStack` to report the location of test failures. It's
+important that any functions that make assertions (or call functions that make
+assertions) have the proper constraint.
+
+It's also important that the top-level `spec` **does not**. Otherwise, failures
+are attributed to the generated `Spec.hs` file.
+
+```hs
+-- Bad
+shouldApproximate :: Double -> Double -> Expectation
+
+-- Good
+shouldApproximate :: HasCallStack => Double -> Double -> Expectation
+
+-- Best (see below)
+shouldApproximate
+  :: (HasCallStack, MonadIO m)
+  => Double
+  -> Double
+  -> m ()
+```
+
+```hs
+-- Bad
+spec :: HasCallStack => Spec
+spec = do
+
+-- Good
+spec :: Spec
+spec = do
+```
+
+### Expectations vs Assertions
+
+Prefer Expectations over Assertions
+
+```hs
+-- Bad
+assertEqual "..." a b
+
+-- Good
+a `shouldBe` b
+```
+
+Except for functions that return values as part of their assertions, like
+`assertJust`, or `assertRight`.
+
+### Exceptions
+
+Use `expectationFailure` when possible. We have an overloaded version that is `m
+a` instead of `m ()` that makes it more useful.
+
+```hs
+-- Bad
+case x of
+  Left er -> throwString err
+  Right x -> x `shouldBe` y
+
+-- Good
+case x of
+  Left er -> expectationFailure err
+  Right x -> x `shouldBe` y
+
+-- Best (relies on overloaded expectationFailure)
+x <- assertRight $ ...
+x `shouldBe` y
+```
+
+Though not required, pattern-match failures are an acceptable way to fail a
+test, since the example type (`AppExample`, `YesodExample`) has usually defined
+`MonadFail(fail)` as `expectationFailure`.
+
+For example, a test that about a user in the DB can incorporate that assertion,
+
+```hs
+-- Meh
+user <- assertJust =<< getDB userId
+userFoo user `shouldBe` Foo
+
+-- Nice
+Just user <- getDB userId
+userFoo user `shouldBe` Foo
+```
+
+#### Example Descriptions
+
+Somehow the "should" Railsism took hold in our code-base. There's no need for it
+and it can often make spec lines so long that they indent strangely.
+
+Also, avoid the word "successfully". When expecting something to happen, that
+you expect it to happen "successfully" can be assumed.
+
+```hs
+-- Bad
+it "should successfully deduplicate the users"
+  $ withGraph
+  $ do
+    omgI'mAllTheWayOverHereNow
+
+-- OK
+it "successfully deduplicates the users" $ ...
+
+-- Best
+it "deduplicates the users" $ withGraph $ do
+  lookHowNiceIFitNow
+```
+
+#### Lifted Expectations
+
+By default, we use and write expectations that are in `MonadIO m`. If you are
+using `TestImport` or `TestImport.IO` you should not have any issues. If you do,
+you are likely,
+
+- Using `TestImport`, but not `withApp`
+
+  Use `TestImport.IO`.
+
+- Mixing `withApp` and non-`withApp` stanzas
+
+  Put everything under `withApp`. (Except `prop`, see below.)
+
+- Using `it "..." $ property`
+
+  Use `prop "..."`.
+
+- Using `prop` under `withApp`
+
+  Pull it out.
+
+- Using `shouldX` with `prop`
+
+  Use a pure `Bool` expression with `prop`.
+
+If you do something that results in an ambiguity. Use Type Applications to
+resolve it.
+
 ## Appendix
 
 ### resources

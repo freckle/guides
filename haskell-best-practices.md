@@ -41,8 +41,7 @@ AND
   function, just apply that function, see
   [haskell-antipattern-existential-typeclass][])
 
-  [haskell-antipattern-existential-typeclass]:
-  https://lukepalmer.wordpress.com/2010/01/24/haskell-antipattern-existential-typeclass/
+  [haskell-antipattern-existential-typeclass]: https://lukepalmer.wordpress.com/2010/01/24/haskell-antipattern-existential-typeclass/
 
 AND
 
@@ -593,8 +592,7 @@ Except for functions that return values as part of their assertions, like
 
 ### Exceptions
 
-Use `expectationFailure` when possible. We have an overloaded version that is `m
-a` instead of `m ()`, which makes it more useful.
+Use `expectationFailure` when possible. We have an overloaded version that is `m a` instead of `m ()`, which makes it more useful.
 
 ```hs
 -- Bad

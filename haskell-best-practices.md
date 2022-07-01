@@ -539,7 +539,7 @@ import Project.Lib
 
 spec :: Spec
 spec = do
-  describe "myPureFunction $ do
+  describe "myPureFunction" $ do
 ```
 
 #### CallStack
@@ -594,7 +594,7 @@ Except for functions that return values as part of their assertions, like
 ### Exceptions
 
 Use `expectationFailure` when possible. We have an overloaded version that is `m
-a` instead of `m ()` that makes it more useful.
+a` instead of `m ()`, which makes it more useful.
 
 ```hs
 -- Bad
@@ -616,7 +616,7 @@ Though not required, pattern-match failures are an acceptable way to fail a
 test, since the example type (`AppExample`, `YesodExample`) has usually defined
 `MonadFail(fail)` as `expectationFailure`.
 
-For example, a test that about a user in the DB can incorporate that assertion,
+For example, a test about a user in the DB can incorporate that assertion,
 
 ```hs
 -- Meh
@@ -654,8 +654,9 @@ it "deduplicates the users" $ withGraph $ do
 #### Lifted Expectations
 
 By default, we use and write expectations that are in `MonadIO m`. If you are
-using `TestImport` or `TestImport.IO` you should not have any issues. If you do,
-you are likely,
+using `TestImport` or `TestImport.IO` you should not have any ambiguity issues.
+
+The following are some things that may cause them, along with their fixes:
 
 - Using `TestImport`, but not `withApp`
 
@@ -677,8 +678,8 @@ you are likely,
 
   Use a pure `Bool` expression with `prop`.
 
-If you do something that results in an ambiguity. Use Type Applications to
-resolve it.
+If you do run into ambiguity, prefer Type Applications (over type signatures or
+annotations) to resolve it.
 
 ## Appendix
 

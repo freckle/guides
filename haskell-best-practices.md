@@ -3,6 +3,67 @@
 **NOTE**: the code examples here may not follow our current style. They have not
 been maintained for that as things have evolved.
 
+## Prelude
+
+- Packages should use `NoImplicitPrelude`
+- Packages can make a package-local prelude module, provided the other guides
+  here are followed
+
+- Packages should not have more than one local prelude
+
+  ```hs
+  -- Bad
+  module Handler1 where
+
+  import Freckle.Api.Prelude -- re-exports Persist stuff by default
+
+  module Handler2 where
+
+  import Freckle.Api.Prelude.Esqueleto -- hides Persist and re-exports Esqueleto
+
+  -- Good
+  module Handler1 where
+
+  import Freckle.Api.Prelude -- re-exports neither Persist or Esqueleto
+
+  import Freckle.Api.Persist -- brings in Persist
+
+  module Handler2 where
+
+  import Freckle.Api.Prelude
+
+  import Freckle.Api.Esqueleto -- brings in Esqueleto
+  ```
+
+- Local preludes should be named `{PackageNamespace}.Prelude`
+
+  ```hs
+  -- Bad
+  import Import
+
+  import Freckle.Import
+
+  import Freckle.Entities.Import
+
+  -- Good
+  import Prelude -- Library without custom prelude module
+
+  import Freckle.App.Prelude -- App without custom prelude module
+
+  import Freckle.Jobs.Prelude -- App with custom prelude module
+
+  import Yesod.Auth.OAuth2.Prelude -- Library with custom prelude module
+  ```
+
+- Libraries must use `Prelude`. Do not force an alternative prelude choice on
+  end-users.
+
+- Applications should use `Freckle.App.Prelude`. If not, they must use
+  `Prelude`.
+
+  If we decide in the future to use a 3rd-party alternative prelude, we will do
+  that within `Freckle.App.Prelude`.
+
 ## Error throwing / exceptions
 
 - Try very hard to avoid partial functions

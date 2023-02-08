@@ -179,33 +179,30 @@ Sometimes you have two types which are very similar, both in their
 representations and in how they're used. For example,
 
 ```haskell
-data Foo
-  = Foo
+data Foo = Foo
   { a :: Int
   , b :: Int
   , c :: Int
   }
 
- data Bar
-   = Bar
-   { a :: Int
-   , b :: Int
-   , c :: Int
-   , d :: Int
-   }
+data Bar = Bar
+  { a :: Int
+  , b :: Int
+  , c :: Int
+  , d :: Int
+  }
 ```
 
 It would be a pain to duplicate functions which operate on these types. A first
 attempt to avoid that might be:
 
 ```haskell
-data FooBar
-  = FooBar
-   { a :: Int
-   , b :: Int
-   , c :: Int
-   , d :: Maybe Int
-   }
+data FooBar = FooBar
+  { a :: Int
+  , b :: Int
+  , c :: Int
+  , d :: Maybe Int
+  }
 ```
 
 but we lose value type safety/documentation here.
@@ -216,16 +213,15 @@ A better approach is to parameterize the field which varies:
 type Never = Proxy
 type Always = Identity
 
-data FooBar f
-  = FooBar
-   { a :: Int
-   , b :: Int
-   , c :: Int
-   , d :: f Int
-   }
+data FooBar f = FooBar
+  { a :: Int
+  , b :: Int
+  , c :: Int
+  , d :: f Int
+  }
 
- type Foo = FooBar Never
- type Bar = FooBar Always
+type Foo = FooBar Never
+type Bar = FooBar Always
 ```
 
 This lets us share the commonalities and still differentiate in a safe way. But
@@ -239,13 +235,12 @@ type family OnlyIfBar (x :: FooBarType) (a :: *) :: * where
   OnlyIfBar Foo a = ()
   OnlyIfBar Bar a = a
 
-data FooBar (x :: FooBarType)
-  = FooBar
-   { a :: Int
-   , b :: Int
-   , c :: Int
-   , d :: OnlyIfBar x Int
-   }
+data FooBar (x :: FooBarType) = FooBar
+  { a :: Int
+  , b :: Int
+  , c :: Int
+  , d :: OnlyIfBar x Int
+  }
 ```
 
 With this approach `d :: FooBar Foo -> ()` (total absence of `d` would be the
@@ -263,7 +258,9 @@ Newtypes in Haskell are used for 3 primary purposes:
 1 allows us to communicate clearly and increase type safety:
 
 ```haskell
-newtype City = City { unCity :: String }
+newtype City = City
+  { unCity :: String
+  }
 
 sf :: City
 sf = City "San Francisco"
@@ -284,7 +281,10 @@ sf = "San Francisco"
 ```haskell
 module Natural (Natural(), mkNatural) where
 
-newtype Natural = Natural { unNatural :: Int }
+newtype Natural = Natural
+  { unNatural :: Int
+  }
+
 mkNatural :: Int -> Maybe Natural
 mkNatural n = if n >= 0 then Just (Natural n) else Nothing
 ```
@@ -292,13 +292,17 @@ mkNatural n = if n >= 0 then Just (Natural n) else Nothing
 3 looks like:
 
 ```haskell
-newtype Add = Add { unAdd :: Int }
+newtype Add = Add
+  { unAdd :: Int
+  }
 
 instance Monoid Add where
   mempty = 0
   mappend = (+)
 
-newtype Mult = Mult { unMult :: Int }
+newtype Mult = Mult
+  { unMult :: Int
+  }
 
 instance Monoid Mult where
   mempty = 1
@@ -311,7 +315,9 @@ The `Tagged` example above makes use of a phantom type variable. The definition
 of `Tagged` is:
 
 ```haskell
-newtype Tagged t a = Tagged { untag :: a }
+newtype Tagged t a = Tagged
+  { untag :: a
+  }
 ```
 
 Note how the type variable `t` does not appear on the right-hand-side of the
@@ -366,12 +372,12 @@ integers, bools, addition, and conditions:
 
 ```haskell
 data Expr
-  | I Int
+  = I Int
   | B Bool
   | Add Expr Expr
   | LessThan Expr Expr
   | Cond Expr Expr Expr
-    deriving (Eq, Show)
+  deriving stock (Eq, Show)
 ```
 
 We can construct values like `Add (I 1) (I 3)` to represent `1 + 3`, but there's
@@ -385,16 +391,16 @@ data Value
   | VB Bool
 
 eval :: Expr -> Maybe Value
-eval (I i) = return $ VI i
-eval (B b) = return $ VB b
+eval (I i) = pure $ VI i
+eval (B b) = pure $ VB b
 eval (Add x y) = do
   VI x' <- eval x
   VI y' <- eval y
-  return $ VI $ x' + y'
+  pure $ VI $ x' + y'
 eval (LessThan x y) = do
   VI x' <- eval x
   VI y' <- eval y
-  return $ VB $ x' < y'
+  pure $ VB $ x' < y'
 eval (Cond c t f) = do
   VB c' <- eval c
   if c'

@@ -68,17 +68,17 @@ That isn't to say we prefer `=<<` over `>>=`
 ```haskell
 -- Good
 result <-
-      action4
-  =<< action3
-  =<< action2
-  =<< action1
+  action4
+    =<< action3
+    =<< action2
+    =<< action1
 
 -- Better
 result <-
-      action1
-  >>= action2
-  >>= action3
-  >>= action4
+  action1
+    >>= action2
+    >>= action3
+    >>= action4
 
 -- Good: this is easy to read left-to-right and scales as the lambda grows
 
@@ -205,7 +205,7 @@ import FrontRow.Jobs.DeleteTeacher (enqueueDeleteTeacher)
 main = do
   if shouldDeleteTeacher teacher
     then enqueueDeleteTeacher teacher
-    then enqueueSyncTeacher teacher
+    else enqueueSyncTeacher teacher
 
 -- Good
 import qualified FrontRow.Jobs.SyncTeacher as SyncTeacher
@@ -214,7 +214,7 @@ import qualified FrontRow.Jobs.DeleteTeacher as DeleteTeacher
 main = do
   if shouldDeleteTeacher teacher
     then DeleteTeacher.enqueue teacher
-    then SyncTeacher.enqueue teacher
+    else SyncTeacher.enqueue teacher
 ```
 
 ### Importing types and qualifying
@@ -355,8 +355,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  data Foo
-    = Foo
+  data Foo = Foo
     {
     -- | Foo's foo
       fooFoo :: Foo
@@ -370,8 +369,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
   ```hs
   -- | A mispelling of fu to avoid detection when coupled with Bar
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoo :: Foo
     -- ^ Foo's foo
     , fooBar :: Bar
@@ -383,8 +381,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
 
   ```hs
   -- | A mispelling of fu to avoid detection when coupled with Bar
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoo :: Foo -- ^ Foo's foo
     , fooBar :: Bar -- ^ Foo's bar
     }
@@ -395,8 +392,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
     , fooBar :: Bar    -- ^ Foo's bar
     }
@@ -405,8 +401,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Good
 
   ```hs
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos
     , fooBar :: Bar -- ^ Foo's bar
     }
@@ -417,8 +412,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Bad
 
   ```hs
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoos :: [Foo] -- ^ Foo's foos is getting really long and might be
                        -- multiple sentences. You might want to go
                        -- context-sensitive too!
@@ -429,8 +423,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   Good
 
   ```hs
-  data Foo
-    = Foo
+  data Foo = Foo
     { fooFoos :: [Foo]
     -- ^ Foo's foos
     --

@@ -338,3 +338,8 @@ body
 body <- getJsonBody
 body `shouldMatchList` [TeacherGet teacherId]
 ```
+
+For asserting against JSON bodies while ignoring extra fields or ordering, use
+[hspec-expectations-json][].
+
+[hspec-expectations-json]: https://hackage.haskell.org/package/hspec-expectations-json

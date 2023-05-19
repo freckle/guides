@@ -22,7 +22,7 @@ Best practices in our Haskell API specifically.
 
 ### [Style](./haskell-style.md)
 
-Haskell style. **TL;DR**: use Brittany.
+Haskell style. **TL;DR**: use Fourmolu.
 
 ### [Testing](./haskell-testing.md)
 

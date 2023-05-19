@@ -5,26 +5,9 @@ outcome has no _objective_ readability problems, we should accept it.
 
 We use three Haskell auto-formatting tools:
 
-- Stylish Haskell (v0.9.2.2)
+- fourmolu (v0.9.0.0)
 
-  We use Stylish Haskell for `import` formatting only, because it does a better
-  job than Brittany. The only manual choice we have to make is if/how to group,
-  for which we have a simple rule you can find below.
-
-- Brittany (v0.11.0.0)
-
-  Brittany will auto-format almost all Haskell code in an automatic way. The
-  current version has some hard edges (hopefully fixed in v0.12), which lead to
-  a few valid exceptions:
-
-  - Operator-heavy expressions where it's valuable to maintain a particular
-    visual shape for readability. Examples: Esqueleto, optparse-applicative
-    parsers, or lens-constructions for Stratosphere.
-
-  - Multi-line quasi-quotes. Examples `aesonQQ`, `hamlet`, etc.
-
-  Such exceptions can be disabled by pragma. Prefer doing this, so the rest of
-  the file can still auto-format successfully.
+  We use Fourmolu for formatting only.
 
 - HLint (v2.1.11)
 

@@ -506,8 +506,13 @@ parameter as evidence that allows GHC to insert safe type casts from `a` to
 
 Note that the constructor's argument type doesn't have to match the type
 argument of the data type (see `LessThan` and `Cond` above). The following is
-perfectly legal (though of dubious utility): ```haskell data Thing a where
-ThingA :: Int -> Thing Bool ThingB :: Bool -> Thing Int
+perfectly legal (though of dubious utility): 
+
+```haskell 
+data Thing a where
+ThingA :: Int -> Thing Bool 
+ThingB :: Bool -> Thing Int
+```
 
 ```haskell
 f :: Thing a -> a

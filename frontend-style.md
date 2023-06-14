@@ -1,6 +1,6 @@
 # Frontend Style Guide
 
-## Required tooling 
+## Required tooling
 
 These automated tools will warn and/or automatically fix most issues with
 syntax-related style. Any of our rules subsumed by one of these tools is not
@@ -60,7 +60,7 @@ formatting style; we just let `prettier` decide for us.
 
 Avoid variable mutation as much as possible.
 
-Use `const` by default.  If you must reassign a variable, use `let`. Never use
+Use `const` by default. If you must reassign a variable, use `let`. Never use
 `var`.
 
 ```js
@@ -88,10 +88,10 @@ Use literal syntax to construct objects.
 
 ```js
 // bad
-const item = new Object()
+const item = new Object();
 
 // good
-const item = {}
+const item = {};
 ```
 
 #### Arrays
@@ -103,7 +103,7 @@ Use array literal syntax to construct arrays
 const items = new Array();
 
 // good
-const items = []
+const items = [];
 ```
 
 ## JSX Style Rules
@@ -115,16 +115,14 @@ Prefer stateless components when possible.
 ```jsx
 // bad
 class Link extends React.Component<void, Props, void> {
- render(): React.Node {
-  return (
-    <a href="#foo">Link</a>
-  )
- }
+  render(): React.Node {
+    return <a href="#foo">Link</a>;
+  }
 }
 
 // good
 function Link(props: Props): React.Node {
-  return <a href="#foo">Link</a>
+  return <a href="#foo">Link</a>;
 }
 ```
 
@@ -203,17 +201,17 @@ be absolute:
 
 // bad
 
-import {MyComponent} from '@example/src/my-page/my-component'
+import { MyComponent } from "@example/src/my-page/my-component";
 
-import {MyOtherPage} from '../../my-other-page'
-import Style from '../my-page/my-page.scss'
+import { MyOtherPage } from "../../my-other-page";
+import Style from "../my-page/my-page.scss";
 
 // good
 
-import {MyOtherPage} from '@example/src/my-other-page'
+import { MyOtherPage } from "@example/src/my-other-page";
 
-import {MyComponent} from './my-component'
-import Style from '../my-page/my-page.scss'
+import { MyComponent } from "./my-component";
+import Style from "../my-page/my-page.scss";
 ```
 
 ## Layout & CSS
@@ -239,10 +237,10 @@ Avoid bootstrap grid in favor of flexbox:
   <div className="column">Column 3</div>
 </div>
 
-.componentWrapper { 
+.componentWrapper {
   display: flex;
-  
-  .column { 
+
+  .column {
     flex: 1;
   }
 }
@@ -261,10 +259,9 @@ Source colors from [`variables/colors.scss`](https://github.com/freckle/megarepo
   color: #f54040;
 }
 
-
 // good
 
-@import '@fr-materials/css/style.scss';
+@import "@fr-materials/css/style.scss";
 
 .orangeThing {
   color: $sunset-orange;
@@ -287,7 +284,7 @@ margin: 8px;
 
 // good
 
-@import '@fr-materials/css/style.scss';
+@import "@fr-materials/css/style.scss";
 
 margin: $std-margin-sm;
 ```

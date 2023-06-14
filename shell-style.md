@@ -188,8 +188,7 @@ if you use `[[` because you want regex or glob matching in one place, don't use
    invoked by the script stands on their own, without additional print
    statements. See the _Rule of Silence_ [here][rules].
 
-   [rules]:
-   https://en.wikipedia.org/wiki/Unix_philosophy#Eric_Raymond.E2.80.99s_17_Unix_Rules
+   [rules]: https://en.wikipedia.org/wiki/Unix_philosophy#Eric_Raymond.E2.80.99s_17_Unix_Rules
 
 1. Scripts should output error information to `stderr` and use exit codes
    responsibly.

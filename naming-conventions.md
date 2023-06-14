@@ -430,8 +430,6 @@ const TeacherRoles = {
 const role = TeacherRoles.Teacher
 ```
 
-[mkpersist]:
-  https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
+[mkpersist]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:mkPersist
 [persistent]: http://hackage.haskell.org/package/persistent
-[sqlsettings]:
-  https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings
+[sqlsettings]: https://www.stackage.org/haddock/lts-12.0/persistent-template-2.5.4/Database-Persist-TH.html#v:sqlSettings

@@ -1,0 +1,8 @@
+restylers:
+  - "*"
+  - fourmolu:
+      include:
+        - "**/*.md"
+      delimiters:
+        start: "```hs"
+        end: "```"

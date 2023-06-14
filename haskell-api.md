@@ -313,30 +313,32 @@ JSON `Value`s with `object` This ensures you don't have a (de)serialization bug
 that passes the tests because it's used in both places.
 
 ```hs
--- Good
-body <- getJsonBody
-body `shouldMatchList` [aesonQQ|
-  [ { id: #{teacherId}
-    }
-  ]
-|]
+example = do
+  -- Good
+  body <- getJsonBody
+  body
+    `shouldMatchList` [aesonQQ|
+      [ { id: #{teacherId}
+        }
+      ]
+    |]
 
--- Or
-body <- getJsonBody
-body `shouldMatchList` [object ["id" .= teacherId]]
+  -- Or
+  body <- getJsonBody
+  body `shouldMatchList` [object ["id" .= teacherId]]
 
--- This doesn't fail on unrelated attribute changes
-body <- getJsonBody @Value
-body
-  ^.. _Array
-  . traverse
-  . key "id"
-  . _JSON
-  `shouldMatchList` [teacherId]
+  -- This doesn't fail on unrelated attribute changes
+  body <- getJsonBody @Value
+  body
+    ^.. _Array
+      . traverse
+      . key "id"
+      . _JSON
+    `shouldMatchList` [teacherId]
 
--- Bad
-body <- getJsonBody
-body `shouldMatchList` [TeacherGet teacherId]
+  -- Bad
+  body <- getJsonBody
+  body `shouldMatchList` [TeacherGet teacherId]
 ```
 
 For asserting against JSON bodies while ignoring extra fields or ordering, use

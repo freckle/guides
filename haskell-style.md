@@ -189,7 +189,9 @@ main = do
   if shouldDeleteTeacher teacher
     then enqueueDeleteTeacher teacher
     else enqueueSyncTeacher teacher
+```
 
+```hs
 -- Good
 import qualified FrontRow.Jobs.SyncTeacher as SyncTeacher
 import qualified FrontRow.Jobs.DeleteTeacher as DeleteTeacher
@@ -276,6 +278,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
   module Foo
     ( foo
     )
+    where
   ```
 
   ```haskell
@@ -288,6 +291,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
   module Foo
     ( foo
     )
+    where
   ```
 
 ## Haddocks
@@ -311,6 +315,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   --
   -- If the size is right, you will get a @Right FlipFlop@, otherwise a @Left@
   --
+  flipFlop :: Size -> Either String FlipFlop
   ```
 
   Good
@@ -321,6 +326,7 @@ yet requiring a certain level of coverage, but it is strongly encouraged.
   -- If the size is right, you will get a @'Right' 'FlipFlop'@, otherwise a
   -- 'Left'.
   --
+  flipFlop :: Size -> Either String FlipFlop
   ```
 
 - Use leading documentation (`-- |`) for top-level definitions and trailing

@@ -55,6 +55,8 @@ been maintained for that as things have evolved.
   import Yesod.Auth.OAuth2.Prelude -- Library with custom prelude module
   ```
 
+- Local preludes that re-export `Prelude` should hide unsafe functions
+
 - Libraries must use `Prelude`. Do not force an alternative prelude choice on
   end-users.
 
@@ -63,6 +65,29 @@ been maintained for that as things have evolved.
 
   If we decide in the future to use a 3rd-party alternative prelude, we will do
   that within `Freckle.App.Prelude`.
+
+- When specifically importing an "unsafe" function from `Prelude`, import it
+  restricted and `qualified as Unsafe` to make that clear:
+
+  ```hs
+  -- Bad
+  import Prelude (last)
+
+  getDockerImageTag :: DockerImage -> Text
+  getDockerImageTag =
+    -- This is safe because we can only ever construct valid 'DockerImage'
+    -- values that contain the @:@ character
+    last . T.splitOn ":" . unDockerImage
+
+  -- Good
+  import qualified Prelude as Unsafe (last)
+
+  getDockerImageTag :: DockerImage -> Text
+  getDockerImageTag =
+    -- This is safe because we can only ever construct valid 'DockerImage'
+    -- values that contain the @:@ character
+    Unsafe.last . T.splitOn ":" . unDockerImage
+  ```
 
 ## Error throwing / exceptions
 

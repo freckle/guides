@@ -234,7 +234,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
 
 **Automated**: sorting and formatting of extension pragmas.
 
-- All Haskell packages MUST use the following language version and `default-extensions`:
+- All Haskell packages MUST use the following `language` and `default-extensions`:
 
   ```yaml
   language: GHC2021

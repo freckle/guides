@@ -234,35 +234,23 @@ Sort your exports, unless the order matters in your desired Haddock output.
 
 **Automated**: sorting and formatting of extension pragmas.
 
-- All Haskell packages MUST use the following `default-extensions`:
+- All Haskell packages MUST use the following `language` and `default-extensions`:
 
   ```yaml
+  language: GHC2021
+
   default-extensions:
-    - BangPatterns
     - DataKinds
     - DeriveAnyClass
-    - DeriveFoldable
-    - DeriveFunctor
-    - DeriveGeneric
-    - DeriveLift
-    - DeriveTraversable
     - DerivingStrategies
     - DerivingVia
-    - FlexibleContexts
-    - FlexibleInstances
     - GADTs
-    - GeneralizedNewtypeDeriving
     - LambdaCase
-    - MultiParamTypeClasses
     - NoImplicitPrelude
     - NoMonomorphismRestriction
     - OverloadedStrings
     - QuasiQuotes
-    - RankNTypes
     - RecordWildCards
-    - ScopedTypeVariables
-    - StandaloneDeriving
-    - TypeApplications
     - TypeFamilies
   ```
 

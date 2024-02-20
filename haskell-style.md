@@ -248,6 +248,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - LambdaCase
     - NoImplicitPrelude
     - NoMonomorphismRestriction
+    - NoPostfixOperators
     - OverloadedStrings
     - QuasiQuotes
     - RecordWildCards

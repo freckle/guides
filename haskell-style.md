@@ -251,7 +251,6 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - NoPostfixOperators
     - OverloadedStrings
     - QuasiQuotes
-    - RecordWildCards
     - TypeFamilies
   ```
 

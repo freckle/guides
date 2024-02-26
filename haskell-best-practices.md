@@ -109,6 +109,33 @@ been maintained for that as things have evolved.
 - [What I Wish I Knew When Learning Haskell](http://dev.stephendiehl.com/hask/)
 - [Haskell For Web Developers](http://www.stephendiehl.com/posts/haskell_web.html)
 
+## Do not prefix record fields
+
+There was once a time when record field names needed to be unique, and so it was
+conventional to prefix them with a constructor name:
+
+```haskell
+data StudentAssignmentReport =
+  StudentAssignmentReport
+    { studentAssignmentReportId :: UUID
+    , studentAssignmentReportGrade :: Percentage
+    , studentAssignmentReportTitle :: Text
+    }
+```
+
+Thanks to `NoFieldSelectors`, `DuplicateRecordFields`, and `OverloadedRecordDot`,
+it does not matter whether a record field has the same name as anything else, and
+so the prefixed field style is no longer useful. Such names should be shortened:
+
+```haskell
+data StudentAssignmentReport =
+  StudentAssignmentReport
+    { id :: UUID
+    , grade :: Percentage
+    , title :: Text
+    }
+```
+
 ## Existentials
 
 Why / when you want to use them:

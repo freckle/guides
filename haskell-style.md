@@ -244,11 +244,14 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - DeriveAnyClass
     - DerivingStrategies
     - DerivingVia
+    - DuplicateRecordFields
     - GADTs
     - LambdaCase
+    - NoFieldSelectors
     - NoImplicitPrelude
     - NoMonomorphismRestriction
     - NoPostfixOperators
+    - OverloadedRecordDot
     - OverloadedStrings
     - QuasiQuotes
     - TypeFamilies

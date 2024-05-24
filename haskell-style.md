@@ -255,6 +255,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
     - OverloadedStrings
     - QuasiQuotes
     - TypeFamilies
+    - TypeOperators
   ```
 
   This defines a consistent, and minimally-extended Haskell environment. Other

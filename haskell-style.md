@@ -240,6 +240,7 @@ Sort your exports, unless the order matters in your desired Haddock output.
   language: GHC2021
 
   default-extensions:
+    - ApplicativeDo
     - DataKinds
     - DeriveAnyClass
     - DerivingStrategies

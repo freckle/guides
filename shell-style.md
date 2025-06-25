@@ -9,10 +9,14 @@
    Add explicit annotations as needed. When adding new scripts, confirm that our
    CI machinery is configured to run on your files.
 
-1. All scripts end in a `.sh` extension
+1. Executable scripts should **not** end in a `.sh` extension
 
-   This is typically an anti-pattern, but we currently rely on it to locate
-   shell scripts within the source tree for the purposes of Shellcheck on CI.
+   An executable shoudl be opaque and not leak its implementation language. If a
+   script is meant to be used as libaray (e.g. with `source`), then it can end in
+   a `.sh` extension but should not be marked exsecutable.
+
+   We use to require a `.sh` extension so CI could locate files for linting, but
+   that is no longer how that works.
 
 1. Always use double-quotes, except where interpolation must be prevented
 
@@ -174,8 +178,8 @@ if you use `[[` because you want regex or glob matching in one place, don't use
 1. Scripts should validate their options and error with proper [usage
    syntax][usage-syntax] and conventional [exit code][exit-code]:
 
-   [usage-syntax]: https://stackoverflow.com/a/9727046 [exit-code]:
-   https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD%204.3-RELEASE&format=html
+   [usage-syntax]: https://stackoverflow.com/a/9727046
+   [exit-code]: https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD%204.3-RELEASE&format=html
 
    ```sh
    if [ "$#" -lt 2 ]; then
@@ -334,13 +338,13 @@ The following features should give you pause:
 
 Some alternatives:
 
-1. Is this part of CI/Deployment? Try writing it in Shake
+1. Is this part of CI/Deployment? Try making a GitHub Action (e.g. in typescript)
 1. Is this called from something like `yarn`? Consider using js-specific tooling
 1. Is the process infrequent and made simpler by hard-coding some information
    about the local environment (paths, passwords, etc)? Consider just
    documenting the command with dummy values to be copied, edited, and run
-1. Is the process frequent, useful, and complex? Consider adding to FRTool or
-   creating a standalone Haskell binary
+1. Is the process frequent, useful, and complex? Consider building a standalone CLI
+   or Haskell binary in the package where it's used
 
 ## Additional References
 

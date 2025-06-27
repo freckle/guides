@@ -7,7 +7,7 @@
    a [TypeScript GitHub Action][gh-tga]. If one doesn't exist, consider making
    one and then using it to create your package.
 
-   [gh-htl]: https://github.com/freckle/haskell-library-template
+   [gh-hlt]: https://github.com/freckle/haskell-library-template
    [gh-tga]: https://github.com/freckle/typescript-action-template
 
 When working in a public repository:
